@@ -1,0 +1,59 @@
+@use 'variables' as *;
+
+@mixin header-gradient {
+  background: linear-gradient(to top, $header-gradient-end 59.459%, $header-gradient-start);
+}
+
+@mixin btn-book {
+  @include header-gradient;
+  color: $text-header;
+  font-family: $font-family;
+  font-weight: 700;
+  font-size: $font-size-base;
+  text-shadow: $shadow-header-text;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s ease;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+@mixin btn-instagram {
+  background-color: $btn-instagram;
+  color: $white;
+  font-family: $font-family;
+  font-weight: 600;
+  font-size: $font-size-base;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  padding: $spacing-sm $spacing-lg;
+  transition: opacity 0.2s ease;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+@mixin card {
+  background: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+@mixin divider {
+  height: 1px;
+  background: $card-border;
+  width: 100%;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

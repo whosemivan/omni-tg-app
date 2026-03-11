@@ -1,0 +1,142 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.detail {
+  background: $white;
+  min-height: 100vh;
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.header {
+  @include header-gradient;
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding: 0 $spacing-md;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  padding: $spacing-xs;
+}
+
+.headerTitle {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-header;
+  text-shadow: $shadow-header-text;
+}
+
+.spacer {
+  width: 32px;
+}
+
+.imageWrap {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-lg;
+  border-bottom: 1px solid $photo-border;
+}
+
+.leftActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.actionBtn {
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.content {
+  padding: $spacing-lg;
+}
+
+.name {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.description {
+  font-size: $font-size-base;
+  color: $text-primary;
+  line-height: 1.5;
+  margin-bottom: $spacing-sm;
+}
+
+.details {
+  font-size: $font-size-base;
+  color: $text-gray;
+  line-height: 1.5;
+  margin-bottom: $spacing-sm;
+}
+
+.price {
+  font-size: $font-size-md;
+  font-weight: 700;
+  color: $text-primary;
+  margin-top: $spacing-sm;
+}
+
+.bookWrap {
+  padding: $spacing-lg;
+  padding-top: 0;
+}
+
+.bookBtn {
+  @include btn-book;
+  width: 100%;
+  height: 44px;
+  font-size: $font-size-md;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: $spacing-lg;
+
+  p {
+    font-size: $font-size-md;
+    color: $text-gray;
+  }
+
+  .backBtn {
+    @include btn-instagram;
+  }
+}

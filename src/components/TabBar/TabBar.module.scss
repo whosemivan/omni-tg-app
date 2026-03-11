@@ -1,0 +1,53 @@
+@use '../../styles/variables' as *;
+
+.tabBar {
+  display: flex;
+  border: 1px solid $photo-border;
+  border-left: none;
+  border-right: none;
+  background: $white;
+
+  width: calc(100% - 16px);
+  margin: 8px;
+  border-radius: 5px;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  color: $text-secondary;
+  border-right: 1px solid $photo-border;
+  transition: color 0.2s ease;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.active {
+    color: $text-primary;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.mapTab {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.mapLabel {
+  font-size: $font-size-md;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.chevron {
+  color: $text-secondary;
+  margin-left: $spacing-xs;
+}

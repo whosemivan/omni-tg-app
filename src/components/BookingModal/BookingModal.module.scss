@@ -1,0 +1,112 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: $white;
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-width: 412px;
+  padding: $spacing-xl $spacing-lg 32px;
+  animation: slideUp 0.3s ease;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.closeBtn {
+  color: $text-gray;
+  padding: $spacing-xs;
+  display: flex;
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.serviceName {
+  font-size: $font-size-base;
+  color: $text-link;
+  font-weight: 600;
+  margin-bottom: $spacing-lg;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  span {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid $card-border;
+  border-radius: $radius-lg;
+  padding: 0 $spacing-md;
+  font-size: $font-size-md;
+  color: $text-primary;
+  background: $card-bg;
+  appearance: none;
+  -webkit-appearance: none;
+
+  &:focus {
+    border-color: $btn-instagram;
+  }
+}
+
+.submitBtn {
+  @include btn-book;
+  width: 100%;
+  height: 48px;
+  font-size: $font-size-md;
+  margin-top: $spacing-sm;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

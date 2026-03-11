@@ -1,0 +1,58 @@
+// Old Instagram color palette (from Figma)
+$header-gradient-start: #4e7ea4;
+$header-gradient-end: #336689;
+$header-divider: #213649;
+
+$page-bg: #d4d4d4;
+$card-bg: #f0f0f0;
+$card-border: #c0c0c0;
+$photo-border: #cecece;
+
+$text-primary: #232323;
+$text-secondary: #6d6d6d;
+$text-gray: #6d6d6f;
+$text-link: #45769a;
+$text-header: #dde9f0;
+$text-stat-label: #a4a4a4;
+
+$btn-instagram: #3897f0;
+$btn-book-gradient-start: #4e7ea4;
+$btn-book-gradient-end: #336689;
+
+$status-bar-bg: #1b1b1b;
+$status-bar-text: #c9cfcf;
+
+$bottom-nav-bg: #f8f8f8;
+$bottom-nav-border: #dbdbdb;
+$bottom-nav-icon: #262626;
+$bottom-nav-active: #3897f0;
+
+$white: #ffffff;
+$black: #000000;
+
+// Typography
+$font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-size-xs: 9px;
+$font-size-sm: 12px;
+$font-size-base: 14px;
+$font-size-md: 16px;
+$font-size-lg: 20px;
+$font-size-xl: 28px;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 20px;
+
+// Borders
+$radius-sm: 2px;
+$radius-md: 3px;
+$radius-lg: 5px;
+
+// Shadows
+$shadow-card: 0 1px 4px rgba(26, 26, 26, 0.25);
+$shadow-header-text: 0 1px 1px rgba(0, 0, 0, 0.48);
+$shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.25);
+$shadow-bottom: 0 1px 1px rgba(0, 0, 0, 0.25);

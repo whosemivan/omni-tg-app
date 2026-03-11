@@ -1,0 +1,9 @@
+@use '../../styles/variables' as *;
+
+.feed {
+  width: calc(100% - 16px);
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2px;
+}
