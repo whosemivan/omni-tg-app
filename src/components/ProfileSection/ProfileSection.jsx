@@ -1,6 +1,6 @@
 import s from './ProfileSection.module.scss';
 
-export default function ProfileSection({ servicesCount, onBook }) {
+export default function ProfileSection({ servicesCount, followersCount, followingCount, onBook }) {
   return (
     <section className={s.profile}>
       <div className={s.topRow}>
@@ -18,12 +18,12 @@ export default function ProfileSection({ servicesCount, onBook }) {
               <span className={s.statLabel}>services</span>
             </div>
             <div className={s.stat}>
-              <span className={s.statNum}>{servicesCount}</span>
-              <span className={s.statLabel}>services</span>
+              <span className={s.statNum}>{followersCount}</span>
+              <span className={s.statLabel}>followers</span>
             </div>
             <div className={s.stat}>
-              <span className={s.statNum}>{servicesCount}</span>
-              <span className={s.statLabel}>services</span>
+              <span className={s.statNum}>{followingCount}</span>
+              <span className={s.statLabel}>following</span>
             </div>
           </div>
           <button className={s.bookBtn} onClick={onBook}>

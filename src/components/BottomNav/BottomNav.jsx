@@ -45,10 +45,10 @@ export default function BottomNav({ activeTab = 'profile', onTabChange }) {
 
       <button
         type="button"
-        className={`${s.item} ${activeTab === 'notifications' ? s.active : ''}`}
-        aria-label="Уведомления"
+        className={`${s.item} ${activeTab === 'address' ? s.active : ''}`}
+        aria-label="Адрес"
         aria-current={activeTab === 'notifications' ? 'true' : undefined}
-        onClick={() => onTabChange?.('notifications')}
+        onClick={() => onTabChange?.('address')}
       >
         <svg className={s.icon} width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />

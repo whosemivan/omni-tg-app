@@ -1,0 +1,26 @@
+ .onboardingRoot {
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.logo {
+  width: 220px;
+  max-width: 70vw;
+  animation: logo-move 2s ease-in-out forwards;
+}
+
+@keyframes logo-move {
+  from {
+    transform: translateY(40px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+

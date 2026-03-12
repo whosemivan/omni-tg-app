@@ -4,7 +4,7 @@ import s from './Header.module.scss';
 
 const CONFETTI_DURATION_MS = 4000;
 
-export default function Header() {
+export default function Header({title}) {
   const [runConfetti, setRunConfetti] = useState(false);
   const [windowSize, setWindowSize] = useState(
     typeof window !== 'undefined' ? { w: window.innerWidth, h: window.innerHeight } : { w: 412, h: 691 }
@@ -28,7 +28,7 @@ export default function Header() {
         />
       )}
       <header className={s.header}>
-        <span className={s.title}>OMNISTUDIO</span>
+        <span className={s.title}>{title ?? 'OMNISTUDIO'}</span>
         <button
           type="button"
           className={s.settingsBtn}

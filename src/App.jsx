@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import StatusBar from './components/StatusBar/StatusBar';
 import Header from './components/Header/Header';
@@ -10,9 +10,13 @@ import ServiceDetail from './components/ServiceDetail/ServiceDetail';
 import BookingModal from './components/BookingModal/BookingModal';
 import BottomNav from './components/BottomNav/BottomNav';
 import ServiceMap from './components/ServiceMap/ServiceMap';
-import GuestFeed from './components/GuestFeed/GuestFeed';
+import PhotoFeed from './components/PhotoFeed/PhotoFeed';
+import AddressFeed from './components/AddressFeed/AddressFeed';
+import CameraScreen from './components/CameraScreen/CameraScreen';
 import services from './data/services.json';
 import { GUEST_PHOTOS } from './data/guestPhotos';
+import { PEOPLE_PHOTOS } from './data/peoplePhotos';
+import Onboarding from './components/Onboarding/Onboarding';
 
 function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
   const [activeTab, setActiveTab] = useState('grid');
@@ -20,8 +24,38 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
   if (bottomNavTab === 'home') {
     return (
       <>
-        <Header />
-        <GuestFeed photos={GUEST_PHOTOS} />
+        <Header title="НАШИ ГОСТИ" />
+        <PhotoFeed photos={GUEST_PHOTOS} />
+        <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
+      </>
+    );
+  }
+
+  if (bottomNavTab === 'explore') {
+    return (
+      <>
+        <Header title="ЗВУКОРЕЖИССЕРЫ" />
+        <PhotoFeed photos={PEOPLE_PHOTOS} />
+        <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
+      </>
+    );
+  }
+
+  if (bottomNavTab === 'camera') {
+    return (
+      <>
+        <Header title="КАМЕРА" />
+        <CameraScreen />
+        <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
+      </>
+    );
+  }
+
+  if (bottomNavTab === 'address') {
+    return (
+      <>
+        <Header title="АДРЕС" />
+        <AddressFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
     );
@@ -30,7 +64,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
   return (
     <>
       <Header />
-      <ProfileSection servicesCount={services.length} onBook={() => onBook(null)} />
+      <ProfileSection servicesCount={services.length} followersCount={'1M'} followingCount={1} onBook={() => onBook(null)} />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       {activeTab === 'grid' && <ServiceGrid services={services} />}
       {activeTab === 'feed' && <ServiceFeed services={services} onBook={onBook} />}
@@ -42,9 +76,24 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
 }
 
 export default function App() {
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [bookingService, setBookingService] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [bottomNavTab, setBottomNavTab] = useState('profile');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (showOnboarding) {
+      const timerId = window.setTimeout(() => {
+        setShowOnboarding(false);
+      }, 2000);
+
+      return () => {
+        window.clearTimeout(timerId);
+      };
+    }
+  }, [showOnboarding]);
 
   const handleBook = useCallback((service) => {
     setBookingService(service || services[0]);
@@ -55,6 +104,10 @@ export default function App() {
     setShowBooking(false);
     setBookingService(null);
   }, []);
+
+  if (showOnboarding) {
+    return <Onboarding />;
+  }
 
   return (
     <BrowserRouter>

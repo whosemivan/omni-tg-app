@@ -1,7 +1,7 @@
 import GuestPost from '../GuestPost/GuestPost';
-import s from './GuestFeed.module.scss';
+import s from './PhotoFeed.module.scss';
 
-export default function GuestFeed({ photos, onConfetti }) {
+export default function PhotoFeed({ photos, onConfetti }) {
   return (
     <div className={s.feed}>
       {photos.map((photo, index) => (
