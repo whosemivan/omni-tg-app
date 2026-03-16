@@ -54,6 +54,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.6;
+  }
 }
 
 .statNum {

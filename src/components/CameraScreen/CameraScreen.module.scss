@@ -46,7 +46,25 @@
   }
 }
 
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.flashOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  z-index: 2;
+  pointer-events: none;
+}
+
 .noSignal {
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;

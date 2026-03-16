@@ -13,6 +13,7 @@ import ServiceMap from './components/ServiceMap/ServiceMap';
 import PhotoFeed from './components/PhotoFeed/PhotoFeed';
 import AddressFeed from './components/AddressFeed/AddressFeed';
 import CameraScreen from './components/CameraScreen/CameraScreen';
+import FollowingList from './components/FollowingList/FollowingList';
 import services from './data/services.json';
 import { GUEST_PHOTOS } from './data/guestPhotos';
 import { PEOPLE_PHOTOS } from './data/peoplePhotos';
@@ -20,6 +21,7 @@ import Onboarding from './components/Onboarding/Onboarding';
 
 function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
   const [activeTab, setActiveTab] = useState('grid');
+  const [showFollowing, setShowFollowing] = useState(false);
 
   if (bottomNavTab === 'home') {
     return (
@@ -61,10 +63,26 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
     );
   }
 
+  if (showFollowing) {
+    return (
+      <>
+        <Header title="OMNISTUDIO" />
+        <FollowingList onBack={() => setShowFollowing(false)} />
+        <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { setShowFollowing(false); onBottomNavChange(tab); }} />
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
-      <ProfileSection servicesCount={services.length} followersCount={'1M'} followingCount={1} onBook={() => onBook(null)} />
+      <ProfileSection
+        servicesCount={services.length}
+        followersCount={'1M'}
+        followingCount={7}
+        onBook={() => onBook(null)}
+        onFollowingClick={() => setShowFollowing(true)}
+      />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       {activeTab === 'grid' && <ServiceGrid services={services} />}
       {activeTab === 'feed' && <ServiceFeed services={services} onBook={onBook} />}

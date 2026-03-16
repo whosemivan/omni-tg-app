@@ -28,7 +28,7 @@ export default function Header({title}) {
         />
       )}
       <header className={s.header}>
-        <span className={s.title}>{title ?? 'OMNISTUDIO'}</span>
+        <span className={`${s.title} ${!title ? s.logo : ''}`}>{title ?? 'Omnistudio'}</span>
         <button
           type="button"
           className={s.settingsBtn}
