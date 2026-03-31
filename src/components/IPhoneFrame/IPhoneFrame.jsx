@@ -23,7 +23,9 @@ export default function IPhoneFrame({ children }) {
         </div>
 
         <div className={styles.screen}>
-          {children}
+          <div className={styles.scrollContent}>
+            {children}
+          </div>
         </div>
 
         <div className={styles.bottomBezel}>

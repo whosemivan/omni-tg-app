@@ -76,16 +76,23 @@
 .screen {
   width: 320px;
   height: 540px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   background: #ffffff;
-  // This transform creates a new containing block for position:fixed children
-  // so BottomNav and BookingModal stay inside the phone screen
+  // transform creates a new containing block for position:fixed children
+  // (BottomNav, BookingModal) so they stay inside the phone screen.
+  // overflow must NOT be auto/scroll here — keep it on .scrollContent instead,
+  // otherwise the browser scrolls fixed children along with the content.
   transform: translate(0, 0);
   position: relative;
   flex-shrink: 0;
+}
 
-  // Hide scrollbar inside screen
+.scrollContent {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
   &::-webkit-scrollbar {
     display: none;
   }
