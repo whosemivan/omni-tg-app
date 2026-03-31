@@ -63,3 +63,15 @@ input, select, textarea {
 ::-webkit-scrollbar {
   display: none;
 }
+
+@media (min-width: 769px) {
+  body {
+    background: #d9d2c8;
+  }
+
+  #root {
+    background: transparent;
+    min-height: unset;
+    width: auto;
+  }
+}

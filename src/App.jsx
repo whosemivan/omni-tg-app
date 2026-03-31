@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import IPhoneFrame from './components/IPhoneFrame/IPhoneFrame';
 import StatusBar from './components/StatusBar/StatusBar';
 import Header from './components/Header/Header';
 import ProfileSection from './components/ProfileSection/ProfileSection';
@@ -128,27 +129,29 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
-      <StatusBar />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <MainPage
-              onBook={handleBook}
-              bottomNavTab={bottomNavTab}
-              onBottomNavChange={setBottomNavTab}
-            />
-          }
-        />
-        <Route
-          path="/service/:id"
-          element={<ServiceDetail onBook={handleBook} />}
-        />
-      </Routes>
-      {showBooking && (
-        <BookingModal service={bookingService} onClose={handleCloseBooking} />
-      )}
-    </BrowserRouter>
+    <IPhoneFrame>
+      <BrowserRouter>
+        <StatusBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainPage
+                onBook={handleBook}
+                bottomNavTab={bottomNavTab}
+                onBottomNavChange={setBottomNavTab}
+              />
+            }
+          />
+          <Route
+            path="/service/:id"
+            element={<ServiceDetail onBook={handleBook} />}
+          />
+        </Routes>
+        {showBooking && (
+          <BookingModal service={bookingService} onClose={handleCloseBooking} />
+        )}
+      </BrowserRouter>
+    </IPhoneFrame>
   );
 }

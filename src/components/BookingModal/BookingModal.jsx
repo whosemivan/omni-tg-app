@@ -16,7 +16,7 @@ export default function BookingModal({ service, onClose }) {
         </div>
 
         <iframe
-        className={s.iframe}
+          className={s.iframe}
           frameBorder='0'
           allowTransparency='true'
           id='ms_booking_iframe'
