@@ -13,18 +13,25 @@
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
   background: $white;
   border-radius: 16px 16px 0 0;
   width: 100%;
-  max-width: 412px;
-  padding: $spacing-xl $spacing-lg 32px;
+  min-height: 700px;
+  overflow:auto;
   animation: slideUp 0.3s ease;
+}
+
+.iframe {
+  width: 100%;
+  min-height: 700px;
 }
 
 .modalHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: $spacing-lg;
 }
 
