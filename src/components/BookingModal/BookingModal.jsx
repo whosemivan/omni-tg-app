@@ -20,7 +20,7 @@ export default function BookingModal({ service, onClose }) {
           frameBorder='0'
           allowTransparency='true'
           id='ms_booking_iframe'
-          src='https://n2079261.yclients.com/company/1820445/personal/menu?o='
+          src='https://n2265225.yclients.com'
           title='Booking'
         />
       </div>

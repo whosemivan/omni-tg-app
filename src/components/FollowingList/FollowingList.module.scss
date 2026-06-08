@@ -75,7 +75,7 @@
   align-items: center;
   padding: $spacing-sm $spacing-lg;
   gap: $spacing-md;
-  border-bottom: 1px solid lighten($card-border, 8%);
+  // border-bottom: 1px solid lighten($card-border, 8%);
 
   &:last-child {
     border-bottom: none;
