@@ -1,8 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import Confetti from 'react-confetti';
 import s from './CameraScreen.module.scss';
-
-const CONFETTI_DURATION_MS = 4000;
 
 export default function CameraScreen() {
   const videoRef = useRef(null);
@@ -12,12 +9,6 @@ export default function CameraScreen() {
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraError, setCameraError] = useState(null);
   const [flash, setFlash] = useState(false);
-  const [runConfetti, setRunConfetti] = useState(false);
-  const [windowSize, setWindowSize] = useState(
-    typeof window !== 'undefined'
-      ? { w: window.innerWidth, h: window.innerHeight }
-      : { w: 412, h: 691 },
-  );
 
   const stopStream = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -53,25 +44,10 @@ export default function CameraScreen() {
     setFacingMode((m) => (m === 'user' ? 'environment' : 'user'));
   }, []);
 
-  const handleShutter = useCallback(() => {
-    setWindowSize({ w: window.innerWidth, h: window.innerHeight });
-    setRunConfetti(true);
-    setTimeout(() => setRunConfetti(false), CONFETTI_DURATION_MS);
-  }, []);
+  const handleShutter = useCallback(() => {}, []);
 
   return (
     <div className={s.camera}>
-      {runConfetti && (
-        <Confetti
-          width={windowSize.w}
-          height={windowSize.h}
-          run={runConfetti}
-          recycle={false}
-          numberOfPieces={300}
-          style={{ position: 'fixed', top: 0, left: 0, zIndex: 100 }}
-        />
-      )}
-
       <div className={s.viewfinder}>
         <video
           ref={videoRef}

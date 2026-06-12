@@ -3,12 +3,11 @@ import { ENGINEERS_ARTICLE } from '../../data/engineers';
 import { useEngineers } from '../../hooks/useEngineers';
 import s from './BookingModal.module.scss';
 
-const TIME_SLOTS = Array.from({ length: 13 }, (_, i) => {
-  const hour = i + 10;
-  return `${hour}:00`;
-});
+const TIME_SLOTS = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const tg = window.Telegram?.WebApp;
+const isTelegram = Boolean(tg?.initData);
 
 function getTodayString() {
   const d = new Date();
@@ -25,7 +24,10 @@ export default function BookingModal({ service, onClose }) {
   const [date, setDate] = useState('');
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
+  const [allNight, setAllNight] = useState(false);
+  const [tgUsername, setTgUsername] = useState('');
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   if (!service) return null;
 
@@ -36,24 +38,32 @@ export default function BookingModal({ service, onClose }) {
 
   const engineer = engineers.find((e) => e.id === engineerId);
   const fromIndex = TIME_SLOTS.indexOf(timeFrom);
-  const endSlots = fromIndex >= 0 ? TIME_SLOTS.slice(fromIndex + 1) : [];
-  const canSubmit = date && timeFrom && timeTo && (engineerId || !needsEngineer) && !loading;
+  const endSlots = fromIndex >= 0
+    ? [...TIME_SLOTS.slice(fromIndex + 1), ...TIME_SLOTS.slice(0, fromIndex)]
+    : TIME_SLOTS;
+  const timeReady = allNight || (timeFrom && timeTo);
+  const canSubmit =
+    date && timeReady && (engineerId || !needsEngineer) && !loading &&
+    (isTelegram || tgUsername.trim());
 
-  const hours = timeFrom && timeTo ? parseHour(timeTo) - parseHour(timeFrom) : 0;
-  const totalPrice = engineer?.rate ? hours * engineer.rate : null;
+  const fromHour = parseHour(timeFrom);
+  const toHour = parseHour(timeTo);
+  const hours = !allNight && timeFrom && timeTo
+    ? (toHour > fromHour ? toHour - fromHour : 24 - fromHour + toHour)
+    : 0;
+  const totalPrice = engineer?.rate && hours > 0 ? hours * engineer.rate : null;
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!canSubmit) return;
 
-    const tg = window.Telegram?.WebApp;
     const tgUser = tg?.initDataUnsafe?.user;
 
     const payload = {
       service: service.name,
       engineer: engineer?.name,
       date,
-      time: `${timeFrom} – ${timeTo}`,
+      time: allNight ? 'Всю ночь' : `${timeFrom} – ${timeTo}`,
       hours,
       price: totalPrice,
       user: tgUser
@@ -62,7 +72,7 @@ export default function BookingModal({ service, onClose }) {
             first_name: tgUser.first_name,
             username: tgUser.username,
           }
-        : { id: 0, first_name: 'Гость', username: 'unknown' },
+        : { id: 0, first_name: 'Гость', username: tgUsername.replace(/^@/, '') },
     };
 
     setLoading(true);
@@ -76,30 +86,13 @@ export default function BookingModal({ service, onClose }) {
       const data = await res.json();
 
       if (data.success) {
-        if (tg?.showPopup) {
-          tg.showPopup({
-            title: 'Успешно',
-            message: 'Заявка отправлена! Мы свяжемся с вами.',
-            buttons: [{ type: 'ok' }],
-          });
-        } else {
-          alert('Заявка отправлена! Мы свяжемся с вами.');
-        }
-        onClose();
+        setResult('success');
       } else {
         throw new Error(data.error || 'Ошибка отправки');
       }
     } catch (err) {
       console.error('Booking error:', err);
-      if (window.Telegram?.WebApp?.showPopup) {
-        window.Telegram.WebApp.showPopup({
-          title: 'Ошибка',
-          message: 'Не удалось отправить заявку. Попробуйте позже.',
-          buttons: [{ type: 'ok' }],
-        });
-      } else {
-        alert('Не удалось отправить заявку. Попробуйте позже.');
-      }
+      setResult('error');
     } finally {
       setLoading(false);
     }
@@ -119,7 +112,50 @@ export default function BookingModal({ service, onClose }) {
 
         <p className={s.serviceName}>{service.name}</p>
 
+        {result ? (
+          <div className={s.result}>
+            <div className={s[result === 'success' ? 'resultIconSuccess' : 'resultIconError']}>
+              {result === 'success' ? (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              ) : (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              )}
+            </div>
+            <p className={s.resultTitle}>
+              {result === 'success' ? 'Заявка отправлена!' : 'Запись не удалась'}
+            </p>
+            <p className={s.resultMessage}>
+              {result === 'success'
+                ? 'Наши модераторы свяжутся с вами в телеграме для дальнейшей записи'
+                : 'Не удалось отправить заявку. Попробуйте позже.'}
+            </p>
+            <button
+              className={s.submitBtn}
+              onClick={result === 'success' ? onClose : () => setResult(null)}
+            >
+              {result === 'success' ? 'Отлично' : 'Попробовать снова'}
+            </button>
+          </div>
+        ) : (
         <form className={s.form} onSubmit={handleSubmit}>
+          {!isTelegram && (
+            <label className={s.label}>
+              <span>Ваш Telegram</span>
+              <input
+                type="text"
+                className={s.input}
+                value={tgUsername}
+                onChange={(e) => setTgUsername(e.target.value)}
+                placeholder="@username"
+                required
+              />
+            </label>
+          )}
+
           {needsEngineer && (
             <div className={s.fieldWithLink}>
               <label className={s.label}>
@@ -162,6 +198,18 @@ export default function BookingModal({ service, onClose }) {
             />
           </label>
 
+          <label className={s.allNightLabel}>
+            <input
+              type="checkbox"
+              checked={allNight}
+              onChange={(e) => {
+                setAllNight(e.target.checked);
+                if (e.target.checked) { setTimeFrom(''); setTimeTo(''); }
+              }}
+            />
+            <span>Всю ночь</span>
+          </label>
+
           <div className={s.timeRow}>
             <label className={s.label}>
               <span>С</span>
@@ -172,10 +220,11 @@ export default function BookingModal({ service, onClose }) {
                   setTimeFrom(e.target.value);
                   setTimeTo('');
                 }}
-                required
+                required={!allNight}
+                disabled={allNight}
               >
                 <option value="" disabled>Начало</option>
-                {TIME_SLOTS.slice(0, -1).map((slot) => (
+                {TIME_SLOTS.map((slot) => (
                   <option key={slot} value={slot}>{slot}</option>
                 ))}
               </select>
@@ -187,8 +236,8 @@ export default function BookingModal({ service, onClose }) {
                 className={s.input}
                 value={timeTo}
                 onChange={(e) => setTimeTo(e.target.value)}
-                required
-                disabled={!timeFrom}
+                required={!allNight}
+                disabled={allNight || !timeFrom}
               >
                 <option value="" disabled>Конец</option>
                 {endSlots.map((slot) => (
@@ -223,6 +272,7 @@ export default function BookingModal({ service, onClose }) {
             {loading ? 'Отправка...' : 'Отправить заявку'}
           </button>
         </form>
+        )}
       </div>
     </div>
   );

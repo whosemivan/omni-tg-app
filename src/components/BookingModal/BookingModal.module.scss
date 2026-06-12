@@ -16,7 +16,7 @@
   background: $white;
   border-radius: 16px 16px 0 0;
   width: 100%;
-  max-width: 412px;
+  max-width: 100%;
   padding: $spacing-xl $spacing-lg 32px;
   animation: slideUp 0.3s ease;
 }
@@ -93,6 +93,29 @@
   }
 }
 
+.allNightLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: $btn-instagram;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-gray;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
 .timeRow {
   display: flex;
   gap: $spacing-sm;
@@ -116,6 +139,11 @@
 
   &:focus {
     border-color: $btn-instagram;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
@@ -164,6 +192,49 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-xl 0 $spacing-sm;
+  text-align: center;
+}
+
+.resultIconSuccess,
+.resultIconError {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-xs;
+}
+
+.resultIconSuccess {
+  background: #e6f9f0;
+  color: #27ae60;
+}
+
+.resultIconError {
+  background: #fdecea;
+  color: #e74c3c;
+}
+
+.resultTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.resultMessage {
+  font-size: $font-size-base;
+  color: $text-secondary;
+  line-height: 1.5;
+  max-width: 280px;
 }
 
 @keyframes fadeIn {

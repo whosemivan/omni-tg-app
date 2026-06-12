@@ -18,6 +18,7 @@ import Loader from './components/Loader/Loader';
 import AddressFeed from './components/AddressFeed/AddressFeed';
 import CameraScreen from './components/CameraScreen/CameraScreen';
 import FollowingList from './components/FollowingList/FollowingList';
+import SettingsPage from './components/SettingsPage/SettingsPage';
 import { useServices } from './hooks/useServices';
 import { GUEST_PHOTOS } from './data/guestPhotos';
 import { PEOPLE_PHOTOS } from './data/peoplePhotos';
@@ -26,11 +27,22 @@ import Onboarding from './components/Onboarding/Onboarding';
 function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesLoading }) {
   const [activeTab, setActiveTab] = useState('grid');
   const [showFollowing, setShowFollowing] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  if (showSettings) {
+    return (
+      <>
+        <Header title="НАСТРОЙКИ" onSettingsClick={() => setShowSettings(false)} />
+        <SettingsPage />
+        <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { setShowSettings(false); onBottomNavChange(tab); }} />
+      </>
+    );
+  }
 
   if (bottomNavTab === 'home') {
     return (
       <>
-        <Header title="НАШИ ГОСТИ" />
+        <Header title="НАШИ ГОСТИ" onSettingsClick={() => setShowSettings(true)} />
         <GuestFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -40,7 +52,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'explore') {
     return (
       <>
-        <Header title="ЗВУКОРЕЖИССЕРЫ" />
+        <Header title="ЗВУКОРЕЖИССЕРЫ" onSettingsClick={() => setShowSettings(true)} />
         <EngineerFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -50,7 +62,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'camera') {
     return (
       <>
-        <Header title="КАМЕРА" />
+        <Header title="КАМЕРА" onSettingsClick={() => setShowSettings(true)} />
         <CameraScreen />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -60,7 +72,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'address') {
     return (
       <>
-        <Header title="АДРЕС" />
+        <Header title="АДРЕС" onSettingsClick={() => setShowSettings(true)} />
         <AddressFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -70,7 +82,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (showFollowing) {
     return (
       <>
-        <Header title="OMNISTUDIO" />
+        <Header title="OMNISTUDIO" onSettingsClick={() => setShowSettings(true)} />
         <FollowingList onBack={() => setShowFollowing(false)} />
         <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { setShowFollowing(false); onBottomNavChange(tab); }} />
       </>
@@ -79,7 +91,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
 
   return (
     <>
-      <Header />
+      <Header onSettingsClick={() => setShowSettings(true)} />
       <ProfileSection
         servicesCount={services.length}
         followersCount={'1M'}
