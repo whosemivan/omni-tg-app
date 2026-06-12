@@ -1,33 +1,33 @@
-// Old Instagram color palette (from Figma)
-$header-gradient-start: #4e7ea4;
-$header-gradient-end: #336689;
-$header-divider: #213649;
+// Color variables reference CSS custom properties (theme-aware)
+$header-gradient-start: var(--header-gradient-start);
+$header-gradient-end: var(--header-gradient-end);
+$header-divider: var(--header-divider);
 
-$page-bg: #d4d4d4;
-$card-bg: #f0f0f0;
-$card-border: #c0c0c0;
-$photo-border: #cecece;
+$page-bg: var(--page-bg);
+$card-bg: var(--card-bg);
+$card-border: var(--card-border);
+$photo-border: var(--photo-border);
 
-$text-primary: #232323;
-$text-secondary: #6d6d6d;
-$text-gray: #6d6d6f;
-$text-link: #45769a;
-$text-header: #dde9f0;
-$text-stat-label: #a4a4a4;
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$text-gray: var(--text-gray);
+$text-link: var(--text-link);
+$text-header: var(--text-header);
+$text-stat-label: var(--text-stat-label);
 
-$btn-instagram: #3897f0;
-$btn-book-gradient-start: #4e7ea4;
-$btn-book-gradient-end: #336689;
+$btn-instagram: var(--btn-instagram);
+$btn-book-gradient-start: var(--header-gradient-start);
+$btn-book-gradient-end: var(--header-gradient-end);
 
-$status-bar-bg: #1b1b1b;
-$status-bar-text: #c9cfcf;
+$status-bar-bg: var(--status-bar-bg);
+$status-bar-text: var(--status-bar-text);
 
-$bottom-nav-bg: #f8f8f8;
-$bottom-nav-border: #dbdbdb;
-$bottom-nav-icon: #262626;
-$bottom-nav-active: #3897f0;
+$bottom-nav-bg: var(--bottom-nav-bg);
+$bottom-nav-border: var(--bottom-nav-border);
+$bottom-nav-icon: var(--bottom-nav-icon);
+$bottom-nav-active: var(--bottom-nav-active);
 
-$white: #ffffff;
+$white: var(--surface);
 $black: #000000;
 
 // Typography
@@ -52,7 +52,7 @@ $radius-md: 3px;
 $radius-lg: 5px;
 
 // Shadows
-$shadow-card: 0 1px 4px rgba(26, 26, 26, 0.25);
+$shadow-card: var(--shadow-card);
 $shadow-header-text: 0 1px 1px rgba(0, 0, 0, 0.48);
 $shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.25);
 $shadow-bottom: 0 1px 1px rgba(0, 0, 0, 0.25);

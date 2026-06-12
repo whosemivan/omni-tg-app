@@ -25,7 +25,7 @@
   flex-shrink: 0;
   width: 90px;
   height: 90px;
-  background: $white;
+  background: #ffffff;
   border-radius: $radius-md;
   overflow: hidden;
 }
@@ -67,6 +67,10 @@
   color: $black;
   line-height: 1.2;
   padding-right: 3px;
+
+  :global([data-theme="dark"]) & {
+    color: #ffffff;
+  }
 }
 
 .statLabel {

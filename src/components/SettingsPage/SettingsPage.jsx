@@ -1,3 +1,4 @@
+import { useTheme } from '../../hooks/useTheme';
 import s from './SettingsPage.module.scss';
 
 const LINKS = [
@@ -109,8 +110,26 @@ const LINKS = [
 ];
 
 export default function SettingsPage() {
+  const { dark, toggle } = useTheme();
+
   return (
     <div className={s.page}>
+      <div className={s.section}>
+        <button className={s.toggleRow} onClick={toggle} type="button">
+          <span className={s.iconWrap}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
+          <span className={s.text}>
+            <span className={s.label}>Тёмная тема</span>
+          </span>
+          <span className={`${s.toggle} ${dark ? s.toggleOn : ''}`}>
+            <span className={s.toggleThumb} />
+          </span>
+        </button>
+      </div>
+
       <ul className={s.list}>
         {LINKS.map((link) => (
           <li key={link.href}>

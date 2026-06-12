@@ -8,6 +8,58 @@
   padding: 0;
 }
 
+.section {
+  background: $card-border;
+  border-top: 1px solid $card-border;
+  border-bottom: 1px solid $card-border;
+  margin-bottom: $spacing-lg;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $white;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+
+  &:active {
+    background: $card-bg;
+  }
+}
+
+.toggle {
+  width: 51px;
+  height: 31px;
+  border-radius: 100px;
+  background: $card-border;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.toggleOn {
+  background: #34c759;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease;
+
+  .toggleOn & {
+    transform: translateX(20px);
+  }
+}
+
 .list {
   display: flex;
   flex-direction: column;
