@@ -28,6 +28,9 @@ export default function CameraScreen() {
   const [cameraError, setCameraError] = useState(null);
   const [flash, setFlash] = useState(false);
   const [activeFilterId, setActiveFilterId] = useState('normal');
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
+
+  const isTelegram = Boolean(window.Telegram?.WebApp?.initData);
 
   const activeFilter = FILTERS.find((f) => f.id === activeFilterId) ?? FILTERS[0];
   const mirrored = facingMode === 'user';
@@ -93,13 +96,19 @@ export default function CameraScreen() {
       ctx.filter = 'none';
     }
 
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/jpeg', 0.92);
-    a.download = `omni-${Date.now()}.jpg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }, [cameraReady, activeFilter]);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+    if (isTelegram) {
+      setCapturedPhoto(dataUrl);
+    } else {
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `omni-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }, [cameraReady, activeFilter, mirrored, isTelegram]);
 
   return (
     <div className={s.camera}>
@@ -131,6 +140,21 @@ export default function CameraScreen() {
         )}
 
         {flash && cameraReady && <div className={s.flashOverlay} />}
+
+        {capturedPhoto && (
+          <div className={s.preview}>
+            <img src={capturedPhoto} alt="Снимок" className={s.previewImg} />
+            <div className={s.previewHint}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+              </svg>
+              Зажми фото и сохрани
+            </div>
+            <button type="button" className={s.retakeBtn} onClick={() => setCapturedPhoto(null)}>
+              Переснять
+            </button>
+          </div>
+        )}
       </div>
 
       <div className={s.filterStrip}>
