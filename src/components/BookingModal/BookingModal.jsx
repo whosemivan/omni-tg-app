@@ -5,7 +5,7 @@ import s from './BookingModal.module.scss';
 
 const TIME_SLOTS = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'https://omni-backend-8sfl.onrender.com';
 const tg = window.Telegram?.WebApp;
 const isTelegram = Boolean(tg?.initData);
 

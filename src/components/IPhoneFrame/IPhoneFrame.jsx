@@ -16,6 +16,7 @@ export default function IPhoneFrame({ children }) {
 
   return (
     <div className={styles.desktop}>
+      <img src="/images/logo.png" alt="Omni Studio" className={styles.desktopLogo} />
       <div className={styles.frame}>
         <div className={styles.topBezel}>
           <div className={styles.camera} />
@@ -34,6 +35,7 @@ export default function IPhoneFrame({ children }) {
           </div>
         </div>
       </div>
+      <p className={styles.desktopAddress}>Москва, М. Дмитровская / Новодмитровская 5А с3</p>
     </div>
   );
 }

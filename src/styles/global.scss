@@ -120,12 +120,9 @@ input, select, textarea {
 }
 
 @media (min-width: 769px) {
+  html,
   body {
-    background: #d9d2c8;
-  }
-
-  [data-theme="dark"] body {
-    background: #0a0a0a;
+    background: #1e1e1e !important;
   }
 
   #root {

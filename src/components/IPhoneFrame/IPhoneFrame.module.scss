@@ -1,14 +1,37 @@
+@use '../../styles/variables' as *;
+
 .desktop {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at center, #f0ebe3 0%, #d9d2c8 100%);
+  gap: 20px;
+  background: #1e1e1e;
   padding: 40px 20px;
 }
 
+.desktopLogo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  user-select: none;
+  pointer-events: none;
+}
+
+.desktopAddress {
+  font-family: $font-family;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.6px;
+  text-align: center;
+  user-select: none;
+}
+
 .frame {
-  width: 360px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,8 +97,8 @@
 }
 
 .screen {
-  width: 320px;
-  height: 540px;
+  width: 360px;
+  height: 620px;
   overflow: hidden;
   background: #ffffff;
   // transform creates a new containing block for position:fixed children
@@ -92,11 +115,20 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  background: $page-bg;
 
   &::-webkit-scrollbar {
-    display: none;
+    width: 3px;
   }
-  scrollbar-width: none;
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 2px;
+  }
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
 .bottomBezel {
