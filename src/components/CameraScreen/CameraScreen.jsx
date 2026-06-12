@@ -1,14 +1,36 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import s from './CameraScreen.module.scss';
 
+const FILTERS = [
+  { id: 'normal',   label: 'Normal',   css: 'none' },
+  { id: 'rio',      label: 'Rio',      css: 'sepia(0.4) saturate(1.5) contrast(0.88) brightness(1.1) hue-rotate(-8deg)' },
+  { id: 'valencia', label: 'Valencia', css: 'sepia(0.2) saturate(1.3) contrast(1.05) brightness(1.08) hue-rotate(10deg)' },
+  { id: 'fade',     label: 'Fade',     css: 'contrast(0.75) brightness(1.2) saturate(0.55)' },
+  { id: 'chrome',   label: 'Chrome',   css: 'grayscale(0.5) contrast(1.3) brightness(1.05) saturate(0.8)' },
+  { id: 'lomo',     label: 'Lomo',     css: 'contrast(1.5) saturate(1.7) brightness(0.88)' },
+  { id: 'bw',       label: 'B&W',      css: 'grayscale(1) contrast(1.1)' },
+  { id: 'negative', label: 'Negative', css: 'invert(1)' },
+];
+
 export default function CameraScreen() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const logoRef = useRef(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/images/logo.png';
+    img.onload = () => { logoRef.current = img; };
+  }, []);
 
   const [facingMode, setFacingMode] = useState('user');
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraError, setCameraError] = useState(null);
   const [flash, setFlash] = useState(false);
+  const [activeFilterId, setActiveFilterId] = useState('normal');
+
+  const activeFilter = FILTERS.find((f) => f.id === activeFilterId) ?? FILTERS[0];
+  const mirrored = facingMode === 'user';
 
   const stopStream = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -44,7 +66,40 @@ export default function CameraScreen() {
     setFacingMode((m) => (m === 'user' ? 'environment' : 'user'));
   }, []);
 
-  const handleShutter = useCallback(() => {}, []);
+  const handleShutter = useCallback(() => {
+    if (!videoRef.current || !cameraReady) return;
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
+    const ctx = canvas.getContext('2d');
+    ctx.save();
+    if (activeFilter.css !== 'none') ctx.filter = activeFilter.css;
+    if (mirrored) {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0);
+    ctx.restore();
+
+    if (logoRef.current) {
+      const logo = logoRef.current;
+      const size = Math.round(canvas.width * 0.13);
+      const pad = Math.round(canvas.width * 0.025);
+      ctx.filter = 'brightness(0)';
+      ctx.globalAlpha = 0.9;
+      ctx.drawImage(logo, canvas.width - size - pad, canvas.height - size - pad, size, size);
+      ctx.globalAlpha = 1;
+      ctx.filter = 'none';
+    }
+
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/jpeg', 0.92);
+    a.download = `omni-${Date.now()}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [cameraReady, activeFilter]);
 
   return (
     <div className={s.camera}>
@@ -52,6 +107,7 @@ export default function CameraScreen() {
         <video
           ref={videoRef}
           className={s.video}
+          style={{ filter: activeFilter.css, transform: mirrored ? 'scaleX(-1)' : 'none' }}
           autoPlay
           playsInline
           muted
@@ -75,6 +131,20 @@ export default function CameraScreen() {
         )}
 
         {flash && cameraReady && <div className={s.flashOverlay} />}
+      </div>
+
+      <div className={s.filterStrip}>
+        {FILTERS.map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            className={`${s.filterItem} ${f.id === activeFilterId ? s.filterItemActive : ''}`}
+            onClick={() => setActiveFilterId(f.id)}
+          >
+            <span className={s.filterCircle} style={{ filter: f.css }} />
+            <span className={s.filterLabel}>{f.label}</span>
+          </button>
+        ))}
       </div>
 
       <div className={s.controls}>
