@@ -12,15 +12,18 @@ import BookingModal from './components/BookingModal/BookingModal';
 import BottomNav from './components/BottomNav/BottomNav';
 import ServiceMap from './components/ServiceMap/ServiceMap';
 import PhotoFeed from './components/PhotoFeed/PhotoFeed';
+import EngineerFeed from './components/EngineerFeed/EngineerFeed';
+import GuestFeed from './components/GuestFeed/GuestFeed';
+import Loader from './components/Loader/Loader';
 import AddressFeed from './components/AddressFeed/AddressFeed';
 import CameraScreen from './components/CameraScreen/CameraScreen';
 import FollowingList from './components/FollowingList/FollowingList';
-import services from './data/services.json';
+import { useServices } from './hooks/useServices';
 import { GUEST_PHOTOS } from './data/guestPhotos';
 import { PEOPLE_PHOTOS } from './data/peoplePhotos';
 import Onboarding from './components/Onboarding/Onboarding';
 
-function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
+function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesLoading }) {
   const [activeTab, setActiveTab] = useState('grid');
   const [showFollowing, setShowFollowing] = useState(false);
 
@@ -28,7 +31,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
     return (
       <>
         <Header title="НАШИ ГОСТИ" />
-        <PhotoFeed photos={GUEST_PHOTOS} />
+        <GuestFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
     );
@@ -38,7 +41,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
     return (
       <>
         <Header title="ЗВУКОРЕЖИССЕРЫ" />
-        <PhotoFeed photos={PEOPLE_PHOTOS} />
+        <EngineerFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
     );
@@ -85,8 +88,8 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange }) {
         onFollowingClick={() => setShowFollowing(true)}
       />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-      {activeTab === 'grid' && <ServiceGrid services={services} />}
-      {activeTab === 'feed' && <ServiceFeed services={services} onBook={onBook} />}
+      {activeTab === 'grid' && (servicesLoading ? <Loader /> : <ServiceGrid services={services} />)}
+      {activeTab === 'feed' && (servicesLoading ? <Loader /> : <ServiceFeed services={services} onBook={onBook} />)}
       {activeTab === 'map' && <ServiceMap />}
       <div style={{ height: 57 }} />
       <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
@@ -99,6 +102,7 @@ export default function App() {
   const [bookingService, setBookingService] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [bottomNavTab, setBottomNavTab] = useState('profile');
+  const { services, loading: servicesLoading } = useServices();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -115,9 +119,9 @@ export default function App() {
   }, [showOnboarding]);
 
   const handleBook = useCallback((service) => {
-    setBookingService(service || services[0]);
+    setBookingService(service || services[0] || null);
     setShowBooking(true);
-  }, []);
+  }, [services]);
 
   const handleCloseBooking = useCallback(() => {
     setShowBooking(false);
@@ -140,6 +144,8 @@ export default function App() {
                 onBook={handleBook}
                 bottomNavTab={bottomNavTab}
                 onBottomNavChange={setBottomNavTab}
+                services={services}
+                servicesLoading={servicesLoading}
               />
             }
           />

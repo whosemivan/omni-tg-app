@@ -1,0 +1,123 @@
+@use '../../styles/variables' as *;
+
+.post {
+  background: $white;
+  border-bottom: 1px solid $photo-border;
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid $photo-border;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: $card-bg;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.username {
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.rate {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  line-height: 1.2;
+}
+
+.imageWrap {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-lg;
+}
+
+.leftActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.actionBtn {
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+
+  &:active { opacity: 0.5; }
+}
+
+.caption {
+  padding: 0 $spacing-lg $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.description {
+  font-size: $font-size-base;
+  color: $text-primary;
+  line-height: 1.4;
+}
+
+.captionName {
+  font-weight: 700;
+}
+
+.services {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.serviceItem {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  padding-left: $spacing-sm;
+
+  &::before {
+    content: '— ';
+  }
+}

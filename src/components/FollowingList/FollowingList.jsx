@@ -1,7 +1,10 @@
-import { ENGINEERS, ENGINEERS_ARTICLE } from '../../data/engineers';
+import { ENGINEERS_ARTICLE } from '../../data/engineers';
+import { useEngineers } from '../../hooks/useEngineers';
 import s from './FollowingList.module.scss';
 
 export default function FollowingList({ onBack }) {
+  const { engineers, loading } = useEngineers();
+
   return (
     <div className={s.page}>
       <div className={s.toolbar}>
@@ -11,7 +14,7 @@ export default function FollowingList({ onBack }) {
           </svg>
         </button>
         <span className={s.toolbarTitle}>Following</span>
-        <span className={s.toolbarCount}>{ENGINEERS.length}</span>
+        <span className={s.toolbarCount}>{loading ? '…' : engineers.length}</span>
       </div>
 
       <a
@@ -24,7 +27,7 @@ export default function FollowingList({ onBack }) {
       </a>
 
       <ul className={s.list}>
-        {ENGINEERS.map((eng) => (
+        {engineers.map((eng) => (
           <li key={eng.id} className={s.row}>
             <img className={s.avatar} src={eng.avatar} alt={eng.name} />
             <div className={s.info}>

@@ -1,12 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import services from '../../data/services.json';
+import { useServices } from '../../hooks/useServices';
+import Loader from '../Loader/Loader';
 import s from './ServiceDetail.module.scss';
 
 export default function ServiceDetail({ onBook }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
+  const { services, loading } = useServices();
   const service = services.find((srv) => srv.id === Number(id));
 
   useEffect(() => {
@@ -21,6 +23,8 @@ export default function ServiceDetail({ onBook }) {
       };
     }
   }, [navigate]);
+
+  if (loading) return <Loader />;
 
   if (!service) {
     return (
