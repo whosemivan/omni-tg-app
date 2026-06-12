@@ -19,6 +19,7 @@ import AddressFeed from './components/AddressFeed/AddressFeed';
 import CameraScreen from './components/CameraScreen/CameraScreen';
 import FollowingList from './components/FollowingList/FollowingList';
 import SettingsPage from './components/SettingsPage/SettingsPage';
+import FAQPage from './components/FAQPage/FAQPage';
 import { useServices } from './hooks/useServices';
 import { GUEST_PHOTOS } from './data/guestPhotos';
 import { PEOPLE_PHOTOS } from './data/peoplePhotos';
@@ -28,13 +29,30 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   const [activeTab, setActiveTab] = useState('grid');
   const [showFollowing, setShowFollowing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showFaq, setShowFaq] = useState(false);
+
+  const closeOverlays = () => { setShowSettings(false); setShowFaq(false); };
+  const sharedHeaderProps = {
+    onSettingsClick: () => { closeOverlays(); setShowSettings(true); },
+    onFaqClick: () => { closeOverlays(); setShowFaq(true); },
+  };
 
   if (showSettings) {
     return (
       <>
-        <Header title="НАСТРОЙКИ" onSettingsClick={() => setShowSettings(false)} />
+        <Header title="НАСТРОЙКИ" onSettingsClick={closeOverlays} onFaqClick={() => { closeOverlays(); setShowFaq(true); }} />
         <SettingsPage />
-        <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { setShowSettings(false); onBottomNavChange(tab); }} />
+        <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { closeOverlays(); onBottomNavChange(tab); }} />
+      </>
+    );
+  }
+
+  if (showFaq) {
+    return (
+      <>
+        <Header title="FAQ" onSettingsClick={() => { closeOverlays(); setShowSettings(true); }} onFaqClick={closeOverlays} />
+        <FAQPage />
+        <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { closeOverlays(); onBottomNavChange(tab); }} />
       </>
     );
   }
@@ -42,7 +60,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'home') {
     return (
       <>
-        <Header title="НАШИ ГОСТИ" onSettingsClick={() => setShowSettings(true)} />
+        <Header title="НАШИ ГОСТИ" {...sharedHeaderProps} />
         <GuestFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -52,7 +70,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'explore') {
     return (
       <>
-        <Header title="ЗВУКОРЕЖИССЕРЫ" onSettingsClick={() => setShowSettings(true)} />
+        <Header title="ЗВУКОРЕЖИССЕРЫ" {...sharedHeaderProps} />
         <EngineerFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -62,7 +80,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'camera') {
     return (
       <>
-        <Header title="КАМЕРА" onSettingsClick={() => setShowSettings(true)} />
+        <Header title="КАМЕРА" {...sharedHeaderProps} />
         <CameraScreen />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -72,7 +90,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'address') {
     return (
       <>
-        <Header title="АДРЕС" onSettingsClick={() => setShowSettings(true)} />
+        <Header title="АДРЕС" {...sharedHeaderProps} />
         <AddressFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
@@ -82,7 +100,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (showFollowing) {
     return (
       <>
-        <Header title="OMNISTUDIO" onSettingsClick={() => setShowSettings(true)} />
+        <Header title="OMNISTUDIO" {...sharedHeaderProps} />
         <FollowingList onBack={() => setShowFollowing(false)} />
         <BottomNav activeTab={bottomNavTab} onTabChange={(tab) => { setShowFollowing(false); onBottomNavChange(tab); }} />
       </>
@@ -91,7 +109,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
 
   return (
     <>
-      <Header onSettingsClick={() => setShowSettings(true)} />
+      <Header {...sharedHeaderProps} />
       <ProfileSection
         servicesCount={services.length}
         followersCount={'1M'}

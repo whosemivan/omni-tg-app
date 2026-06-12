@@ -36,7 +36,21 @@ export default function FollowingList({ onBack }) {
                 {eng.rate ? `${eng.rate.toLocaleString('ru-RU')} ₽/ч` : 'дистанционно'}
               </span>
             </div>
-            <span className={s.badge}>Подписаться</span>
+            {eng.telegram ? (
+              <a
+                href={`https://t.me/${eng.telegram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={s.tgBtn}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.46.7-.92.44l-2.56-1.88-1.24 1.2c-.14.14-.26.26-.52.26l.18-2.6 4.72-4.26c.2-.18-.04-.28-.32-.1L7.6 14.42 5.08 13.6c-.56-.18-.58-.56.12-.82l10.32-3.98c.46-.18.86.1.72.8z"/>
+                </svg>
+                TG
+              </a>
+            ) : (
+              <span className={s.badge}>скоро</span>
+            )}
           </li>
         ))}
       </ul>

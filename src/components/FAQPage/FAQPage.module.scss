@@ -1,0 +1,59 @@
+@use '../../styles/variables' as *;
+
+.page {
+  flex: 1;
+  background: $page-bg;
+  overflow-y: auto;
+  padding: $spacing-lg 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: $card-border;
+  border-top: 1px solid $card-border;
+  border-bottom: 1px solid $card-border;
+}
+
+.item {
+  background: $white;
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  width: 100%;
+  padding: $spacing-md $spacing-lg;
+  background: none;
+  text-align: left;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-primary;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: $text-gray;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.answer {
+  padding: 0 $spacing-lg $spacing-md;
+  font-size: $font-size-base;
+  color: $text-secondary;
+  line-height: 1.55;
+  border-top: 1px solid $card-border;
+  padding-top: $spacing-sm;
+}
