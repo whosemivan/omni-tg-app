@@ -5,6 +5,7 @@ export default function IPhoneFrame({ children }) {
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' && window.innerWidth > 768
   );
+  const [isOn, setIsOn] = useState(true);
 
   useEffect(() => {
     const onResize = () => setIsDesktop(window.innerWidth > 768);
@@ -16,26 +17,21 @@ export default function IPhoneFrame({ children }) {
 
   return (
     <div className={styles.desktop}>
-      <img src="/images/logo.png" alt="Omni Studio" className={styles.desktopLogo} />
-      <div className={styles.frame}>
-        <div className={styles.topBezel}>
-          <div className={styles.camera} />
-          <div className={styles.speaker} />
-        </div>
-
-        <div className={styles.screen}>
-          <div className={styles.scrollContent}>
-            {children}
+      <div className={styles.outerShell}>
+        <button className={styles.powerBtn} onClick={() => setIsOn(v => !v)} />
+        <div className={styles.innerBody}>
+          <div className={`${styles.screen}${isOn ? '' : ` ${styles.screenOff}`}`}>
+            <div className={styles.scrollContent}>
+              {children}
+            </div>
           </div>
-        </div>
-
-        <div className={styles.bottomBezel}>
           <div className={styles.homeButton}>
             <div className={styles.homeButtonInner} />
           </div>
         </div>
       </div>
       <p className={styles.desktopAddress}>Москва, М. Дмитровская / Новодмитровская 5А с3</p>
+      <img src="/images/whitelogo.png" alt="Omni Studio" className={styles.desktopLogo} />
     </div>
   );
 }

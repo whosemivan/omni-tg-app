@@ -70,7 +70,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
   if (bottomNavTab === 'explore') {
     return (
       <>
-        <Header title="ЗВУКОРЕЖИССЕРЫ" {...sharedHeaderProps} />
+        <Header title="ЗВУКОРЕЖИССЕРЫ" onSettingsClick={() => { closeOverlays(); setShowSettings(true); }} />
         <EngineerFeed />
         <BottomNav activeTab={bottomNavTab} onTabChange={onBottomNavChange} />
       </>
