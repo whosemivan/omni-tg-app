@@ -17,7 +17,9 @@
   border-radius: 16px 16px 0 0;
   width: 100%;
   max-width: 100%;
-  padding: $spacing-xl $spacing-lg 32px;
+  max-height: calc(100% - 20px);
+  overflow-y: auto;
+  padding: 0 $spacing-lg 32px;
   animation: slideUp 0.3s ease;
 }
 
@@ -26,6 +28,11 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: $spacing-lg;
+  position: sticky;
+  top: 0;
+  padding-top: $spacing-xl;
+  background: $white;
+  z-index: 1;
 }
 
 .modalTitle {

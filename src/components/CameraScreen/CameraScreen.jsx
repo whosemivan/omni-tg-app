@@ -12,6 +12,24 @@ const FILTERS = [
   { id: 'negative', label: 'Negative', css: 'invert(1)' },
 ];
 
+function bakeFilter(dataUrl, filterCss) {
+  return new Promise((resolve) => {
+    if (filterCss === 'none') { resolve(dataUrl); return; }
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      const cx = c.getContext('2d');
+      cx.filter = filterCss;
+      cx.drawImage(img, 0, 0);
+      resolve(c.toDataURL('image/jpeg', 0.92));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 export default function CameraScreen() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
@@ -28,9 +46,8 @@ export default function CameraScreen() {
   const [cameraError, setCameraError] = useState(null);
   const [flash, setFlash] = useState(false);
   const [activeFilterId, setActiveFilterId] = useState('normal');
+  // { dataUrl: string, filterCss: string } | null
   const [capturedPhoto, setCapturedPhoto] = useState(null);
-
-  const isTelegram = Boolean(window.Telegram?.WebApp?.initData);
 
   const activeFilter = FILTERS.find((f) => f.id === activeFilterId) ?? FILTERS[0];
   const mirrored = facingMode === 'user';
@@ -77,7 +94,6 @@ export default function CameraScreen() {
     canvas.height = video.videoHeight || 720;
     const ctx = canvas.getContext('2d');
     ctx.save();
-    if (activeFilter.css !== 'none') ctx.filter = activeFilter.css;
     if (mirrored) {
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
@@ -97,18 +113,33 @@ export default function CameraScreen() {
     }
 
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    setCapturedPhoto({ dataUrl, filterCss: activeFilter.css });
+  }, [cameraReady, activeFilter, mirrored]);
 
-    if (isTelegram) {
-      setCapturedPhoto(dataUrl);
-    } else {
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `omni-${Date.now()}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+  const handleSave = useCallback(async () => {
+    if (!capturedPhoto) return;
+    const { dataUrl, filterCss } = capturedPhoto;
+
+    const saveUrl = await bakeFilter(dataUrl, filterCss);
+
+    try {
+      const blob = await fetch(saveUrl).then((r) => r.blob());
+      const file = new File([blob], `omni-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return;
     }
-  }, [cameraReady, activeFilter, mirrored, isTelegram]);
+
+    const a = document.createElement('a');
+    a.href = saveUrl;
+    a.download = `omni-${Date.now()}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [capturedPhoto]);
 
   return (
     <div className={s.camera}>
@@ -143,16 +174,20 @@ export default function CameraScreen() {
 
         {capturedPhoto && (
           <div className={s.preview}>
-            <img src={capturedPhoto} alt="Снимок" className={s.previewImg} />
-            <div className={s.previewHint}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
-              </svg>
-              Зажми фото и сохрани
+            <img
+              src={capturedPhoto.dataUrl}
+              alt="Снимок"
+              className={s.previewImg}
+              style={{ filter: capturedPhoto.filterCss }}
+            />
+            <div className={s.previewActions}>
+              <button type="button" className={s.retakeBtn} onClick={() => setCapturedPhoto(null)}>
+                Переснять
+              </button>
+              <button type="button" className={s.saveBtn} onClick={handleSave}>
+                Сохранить
+              </button>
             </div>
-            <button type="button" className={s.retakeBtn} onClick={() => setCapturedPhoto(null)}>
-              Переснять
-            </button>
           </div>
         )}
       </div>

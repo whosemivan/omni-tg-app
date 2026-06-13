@@ -7,6 +7,12 @@
   min-height: calc(100vh - 101px);
   background: #1a1a1a;
   padding-bottom: 44px;
+
+  @media (min-width: 769px) {
+    min-height: 0;
+    height: 363px; // 500px screen − 26px statusbar − 54px header − 57px bottomnav
+    padding-bottom: 0; // bottomnav is a separate sibling on desktop
+  }
 }
 
 /* ---- Viewfinder ---- */
@@ -92,6 +98,11 @@
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (min-width: 769px) {
+    padding: 5px 12px;
+    gap: 2px;
+  }
 }
 
 .filterItem {
@@ -106,6 +117,11 @@
   cursor: pointer;
   padding: 2px 0;
   -webkit-tap-highlight-color: transparent;
+
+  @media (min-width: 769px) {
+    gap: 3px;
+    width: 44px;
+  }
 }
 
 .filterCircle {
@@ -120,6 +136,11 @@
   .filterItemActive & {
     border-color: #fff;
   }
+
+  @media (min-width: 769px) {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 .filterLabel {
@@ -133,6 +154,10 @@
   .filterItemActive & {
     color: #fff;
   }
+
+  @media (min-width: 769px) {
+    font-size: 7px;
+  }
 }
 
 /* ---- Bottom controls ---- */
@@ -144,6 +169,10 @@
   justify-content: space-around;
   padding: 18px 24px 22px;
   background: linear-gradient(to bottom, #252525 0%, #1a1a1a 100%);
+
+  @media (min-width: 769px) {
+    padding: 8px 24px 10px;
+  }
 }
 
 /* Side buttons (flash / flip) */
@@ -193,23 +222,30 @@
   min-height: 0;
 }
 
-.previewHint {
+.previewActions {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.75);
-  color: rgba(255, 255, 255, 0.85);
-  font-family: $font-family;
-  font-size: $font-size-sm;
-  font-weight: 600;
-  letter-spacing: 0.3px;
 }
 
 .retakeBtn {
-  flex-shrink: 0;
+  flex: 1;
+  padding: 13px;
+  background: #1a1a1a;
+  border: none;
+  border-right: 1px solid #2a2a2a;
+  color: #aaa;
+  font-family: $font-family;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.saveBtn {
+  flex: 1;
   padding: 13px;
   background: #1a1a1a;
   border: none;
@@ -251,6 +287,11 @@
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.35);
   background: transparent;
+
+  @media (min-width: 769px) {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 .shutterInner {
@@ -262,4 +303,9 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     0 2px 6px rgba(0, 0, 0, 0.5);
   transition: transform 0.1s ease, background 0.1s ease;
+
+  @media (min-width: 769px) {
+    width: 36px;
+    height: 36px;
+  }
 }
