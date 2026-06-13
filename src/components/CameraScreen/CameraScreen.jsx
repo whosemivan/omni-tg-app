@@ -12,6 +12,77 @@ const FILTERS = [
   { id: 'negative', label: 'Negative', css: 'invert(1)' },
 ];
 
+// ctx.filter not supported on iOS Safari < 18
+const CTX_FILTER_OK = (() => {
+  try {
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.filter = 'brightness(1)';
+    return Boolean(ctx.filter) && ctx.filter !== 'none';
+  } catch { return false; }
+})();
+
+function parseFilterFunctions(css) {
+  const out = [];
+  const re = /([\w-]+)\(([^)]+)\)/g;
+  let m;
+  while ((m = re.exec(css)) !== null) {
+    const raw = m[2].trim();
+    out.push({ name: m[1], value: raw.endsWith('deg') ? parseFloat(raw) * (Math.PI / 180) : parseFloat(raw) });
+  }
+  return out;
+}
+
+function cl(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+function mat3(r, g, b, m) {
+  return [
+    cl(r * m[0] + g * m[1] + b * m[2]),
+    cl(r * m[3] + g * m[4] + b * m[5]),
+    cl(r * m[6] + g * m[7] + b * m[8]),
+  ];
+}
+
+function applyOne(name, val, r, g, b) {
+  switch (name) {
+    case 'brightness':
+      return [cl(r * val), cl(g * val), cl(b * val)];
+    case 'contrast':
+      return [cl((r - 0.5) * val + 0.5), cl((g - 0.5) * val + 0.5), cl((b - 0.5) * val + 0.5)];
+    case 'saturate':
+      return mat3(r, g, b, [
+        0.213 + 0.787 * val, 0.715 - 0.715 * val, 0.072 - 0.072 * val,
+        0.213 - 0.213 * val, 0.715 + 0.285 * val, 0.072 - 0.072 * val,
+        0.213 - 0.213 * val, 0.715 - 0.715 * val, 0.072 + 0.928 * val,
+      ]);
+    case 'sepia':
+      return mat3(r, g, b, [
+        0.393 + 0.607 * (1 - val), 0.769 - 0.769 * val, 0.189 - 0.189 * val,
+        0.349 - 0.349 * val,       0.686 + 0.314 * val, 0.168 - 0.168 * val,
+        0.272 - 0.272 * val,       0.534 - 0.534 * val, 0.131 + 0.869 * val,
+      ]);
+    case 'grayscale': {
+      const s = 1 - val;
+      return mat3(r, g, b, [
+        0.213 + 0.787 * s, 0.715 - 0.715 * s, 0.072 - 0.072 * s,
+        0.213 - 0.213 * s, 0.715 + 0.285 * s, 0.072 - 0.072 * s,
+        0.213 - 0.213 * s, 0.715 - 0.715 * s, 0.072 + 0.928 * s,
+      ]);
+    }
+    case 'hue-rotate': {
+      const cos = Math.cos(val), sin = Math.sin(val);
+      return mat3(r, g, b, [
+        0.213 + cos * 0.787 - sin * 0.213, 0.715 - cos * 0.715 - sin * 0.715, 0.072 - cos * 0.072 + sin * 0.928,
+        0.213 - cos * 0.213 + sin * 0.143, 0.715 + cos * 0.285 + sin * 0.140, 0.072 - cos * 0.072 - sin * 0.283,
+        0.213 - cos * 0.213 - sin * 0.787, 0.715 - cos * 0.715 + sin * 0.715, 0.072 + cos * 0.928 + sin * 0.072,
+      ]);
+    }
+    case 'invert':
+      return [cl(r + (1 - 2 * r) * val), cl(g + (1 - 2 * g) * val), cl(b + (1 - 2 * b) * val)];
+    default:
+      return [r, g, b];
+  }
+}
+
 function bakeFilter(dataUrl, filterCss) {
   return new Promise((resolve) => {
     if (filterCss === 'none') { resolve(dataUrl); return; }
@@ -21,8 +92,23 @@ function bakeFilter(dataUrl, filterCss) {
       c.width = img.naturalWidth;
       c.height = img.naturalHeight;
       const cx = c.getContext('2d');
-      cx.filter = filterCss;
-      cx.drawImage(img, 0, 0);
+
+      if (CTX_FILTER_OK) {
+        cx.filter = filterCss;
+        cx.drawImage(img, 0, 0);
+      } else {
+        cx.drawImage(img, 0, 0);
+        const funcs = parseFilterFunctions(filterCss);
+        const id = cx.getImageData(0, 0, c.width, c.height);
+        const d = id.data;
+        for (let i = 0; i < d.length; i += 4) {
+          let r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+          for (const f of funcs) [r, g, b] = applyOne(f.name, f.value, r, g, b);
+          d[i] = r * 255; d[i + 1] = g * 255; d[i + 2] = b * 255;
+        }
+        cx.putImageData(id, 0, 0);
+      }
+
       resolve(c.toDataURL('image/jpeg', 0.92));
     };
     img.onerror = () => resolve(dataUrl);
