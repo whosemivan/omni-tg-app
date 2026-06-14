@@ -1,24 +1,17 @@
 import { useState } from 'react';
+import { useFAQ } from '../../hooks/useFAQ';
 import s from './FAQPage.module.scss';
 
-const FAQ = [
-  {
-    q: 'Боюсь идти на запись, я новичок — что делать?',
-    a: 'Не бойся! Наши звукорежиссёры — профессионалы, настроят на дружелюбный вайб, помогут с текстом, мотивом и битом.',
-  },
-  {
-    q: 'Как до нас добраться?',
-    a: 'Метро Дмитровская, пройти через Хлебзавод — Новодмитровская 5А с3.',
-  },
-];
-
 export default function FAQPage() {
+  const { faq, loading } = useFAQ();
   const [open, setOpen] = useState(null);
+
+  if (loading) return <div className={s.page} />;
 
   return (
     <div className={s.page}>
       <ul className={s.list}>
-        {FAQ.map((item, i) => (
+        {faq.map((item, i) => (
           <li key={i} className={s.item}>
             <button
               className={s.question}

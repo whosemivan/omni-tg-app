@@ -128,25 +128,19 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
 }
 
 export default function App() {
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [timerDone, setTimerDone] = useState(false);
   const [bookingService, setBookingService] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [bottomNavTab, setBottomNavTab] = useState('profile');
   const { services, loading: servicesLoading } = useServices();
 
+  // Show onboarding until both: min 2s elapsed AND services loaded
+  const showOnboarding = !timerDone || servicesLoading;
+
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    if (showOnboarding) {
-      const timerId = window.setTimeout(() => {
-        setShowOnboarding(false);
-      }, 2000);
-
-      return () => {
-        window.clearTimeout(timerId);
-      };
-    }
-  }, [showOnboarding]);
+    const timerId = window.setTimeout(() => setTimerDone(true), 2000);
+    return () => window.clearTimeout(timerId);
+  }, []);
 
   const handleBook = useCallback((service) => {
     setBookingService(service || services[0] || null);

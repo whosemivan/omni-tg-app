@@ -26,6 +26,12 @@
   letter-spacing: 0.6px;
   text-align: center;
   user-select: none;
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.85);
+  }
 }
 
 // Outer silver shell — ios3 .block (367×616)

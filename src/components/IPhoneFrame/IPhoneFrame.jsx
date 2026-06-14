@@ -30,7 +30,14 @@ export default function IPhoneFrame({ children }) {
           </div>
         </div>
       </div>
-      <p className={styles.desktopAddress}>Москва, М. Дмитровская / Новодмитровская 5А с3</p>
+      <a
+        href="https://yandex.com/maps/-/CPtTfJ~e"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.desktopAddress}
+      >
+        Москва, М. Дмитровская / Новодмитровская 5А с3
+      </a>
       <img src="/images/whitelogo.png" alt="Omni Studio" className={styles.desktopLogo} />
     </div>
   );
