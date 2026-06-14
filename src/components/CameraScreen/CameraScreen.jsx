@@ -12,12 +12,16 @@ const FILTERS = [
   { id: 'negative', label: 'Negative', css: 'invert(1)' },
 ];
 
-// ctx.filter not supported on iOS Safari < 18
+// Functional test: draw white pixel with brightness(0) filter, check it becomes black
 const CTX_FILTER_OK = (() => {
   try {
-    const ctx = document.createElement('canvas').getContext('2d');
-    ctx.filter = 'brightness(1)';
-    return Boolean(ctx.filter) && ctx.filter !== 'none';
+    const c = document.createElement('canvas');
+    c.width = 1; c.height = 1;
+    const ctx = c.getContext('2d');
+    ctx.filter = 'brightness(0)';
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 1, 1);
+    return ctx.getImageData(0, 0, 1, 1).data[0] === 0;
   } catch { return false; }
 })();
 
@@ -175,41 +179,80 @@ export default function CameraScreen() {
   const handleShutter = useCallback(() => {
     if (!videoRef.current || !cameraReady) return;
     const video = videoRef.current;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 1280;
-    canvas.height = video.videoHeight || 720;
-    const ctx = canvas.getContext('2d');
-    ctx.save();
-    if (mirrored) {
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-    }
-    ctx.drawImage(video, 0, 0);
-    ctx.restore();
+    const w = video.videoWidth || 1280;
+    const h = video.videoHeight || 720;
 
-    if (logoRef.current) {
-      const logo = logoRef.current;
-      const size = Math.round(canvas.width * 0.13);
-      const pad = Math.round(canvas.width * 0.025);
-      ctx.filter = 'brightness(0)';
-      ctx.globalAlpha = 0.9;
-      ctx.drawImage(logo, canvas.width - size - pad, canvas.height - size - pad, size, size);
-      ctx.globalAlpha = 1;
-      ctx.filter = 'none';
-    }
+    // Step 1: capture raw mirrored frame and immediately export to data URL.
+    // toDataURL works on iOS even when the canvas is camera-tainted.
+    const raw = document.createElement('canvas');
+    raw.width = w; raw.height = h;
+    const rawCtx = raw.getContext('2d');
+    rawCtx.save();
+    if (mirrored) { rawCtx.translate(w, 0); rawCtx.scale(-1, 1); }
+    rawCtx.drawImage(video, 0, 0);
+    rawCtx.restore();
+    const rawDataUrl = raw.toDataURL('image/jpeg', 0.92);
 
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    setCapturedPhoto({ dataUrl, filterCss: activeFilter.css });
+    // Step 2: load from data URL into an <img> so the next canvas is untainted,
+    // then bake filter + logo and store result.
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const cx = c.getContext('2d');
+
+      if (activeFilter.css === 'none' || !activeFilter.css) {
+        cx.drawImage(img, 0, 0);
+      } else if (CTX_FILTER_OK) {
+        cx.filter = activeFilter.css;
+        cx.drawImage(img, 0, 0);
+        cx.filter = 'none';
+      } else {
+        // Manual pixel manipulation on untainted canvas — always safe
+        cx.drawImage(img, 0, 0);
+        const funcs = parseFilterFunctions(activeFilter.css);
+        const id = cx.getImageData(0, 0, c.width, c.height);
+        const d = id.data;
+        for (let i = 0; i < d.length; i += 4) {
+          let r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+          for (const f of funcs) [r, g, b] = applyOne(f.name, f.value, r, g, b);
+          d[i] = r * 255; d[i + 1] = g * 255; d[i + 2] = b * 255;
+        }
+        cx.putImageData(id, 0, 0);
+      }
+
+      if (logoRef.current) {
+        const logo = logoRef.current;
+        const size = Math.round(c.width * 0.13);
+        const pad = Math.round(c.width * 0.025);
+        cx.filter = 'brightness(0)';
+        cx.globalAlpha = 0.9;
+        cx.drawImage(logo, c.width - size - pad, c.height - size - pad, size, size);
+        cx.globalAlpha = 1;
+        cx.filter = 'none';
+      }
+
+      setCapturedPhoto({ dataUrl: c.toDataURL('image/jpeg', 0.92), filterCss: 'none' });
+    };
+    img.onerror = () => {
+      // Fallback: show raw photo with CSS filter; save without baked filter
+      setCapturedPhoto({ dataUrl: rawDataUrl, filterCss: activeFilter.css });
+    };
+    img.src = rawDataUrl;
   }, [cameraReady, activeFilter, mirrored]);
 
   const handleSave = useCallback(async () => {
     if (!capturedPhoto) return;
-    const { dataUrl, filterCss } = capturedPhoto;
-
-    const saveUrl = await bakeFilter(dataUrl, filterCss);
+    const { dataUrl } = capturedPhoto;
 
     try {
-      const blob = await fetch(saveUrl).then((r) => r.blob());
+      // fetch('data:...') не работает в iOS WKWebView — конвертируем вручную
+      const [meta, b64] = dataUrl.split(',');
+      const mime = meta.match(/:(.*?);/)[1];
+      const bytes = atob(b64);
+      const arr = new Uint8Array(bytes.length);
+      for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+      const blob = new Blob([arr], { type: mime });
       const file = new File([blob], `omni-${Date.now()}.jpg`, { type: 'image/jpeg' });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
@@ -220,7 +263,7 @@ export default function CameraScreen() {
     }
 
     const a = document.createElement('a');
-    a.href = saveUrl;
+    a.href = dataUrl;
     a.download = `omni-${Date.now()}.jpg`;
     document.body.appendChild(a);
     a.click();
