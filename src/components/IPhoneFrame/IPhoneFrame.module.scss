@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use '../../styles/variables'as *;
 
 .desktop {
   min-height: 100vh;
@@ -9,6 +9,7 @@
   gap: 20px;
   background: #1e1e1e;
   padding: 40px 20px;
+  position: relative;
 }
 
 .desktopLogo {
@@ -148,13 +149,16 @@
   &::-webkit-scrollbar {
     width: 2px;
   }
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.18);
     border-radius: 2px;
   }
+
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
@@ -180,4 +184,74 @@
   height: 22px;
   border: 1.5px solid #6a7177;
   border-radius: 4px;
+}
+
+.emoji {
+  color: rgba(255, 255, 255, 0.55);
+  position: absolute;
+  left: calc(50% + 260px);
+  top: 35%;
+  transform: translateY(-50%) rotate(20deg);
+
+  &::after {
+    content: "";
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    background-image: url('/images/sc.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(20deg);
+    top: 35px;
+    left: 70px;
+  }
+
+  &::before {
+    content: "";
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-image: url('/images/money.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(-40deg);
+    top: 30px;
+    left: 100px;
+    z-index: 100;
+  }
+
+  a {
+    padding-left: 50px;
+
+    &::after {
+      content: "";
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      background-image: url('/images/xbox.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: rotate(-20deg);
+      top: 16px;
+      left: 37px;
+    }
+
+    &::before {
+      content: "";
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      background-image: url('/images/neuman.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: rotate(20deg);
+      top: 33px;
+      left: 19px;
+      z-index: 100;
+    }
+  }
 }

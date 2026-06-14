@@ -30,6 +30,11 @@ export default function IPhoneFrame({ children }) {
           </div>
         </div>
       </div>
+      <div className={styles.emoji}>
+        <a href="https://t.me/addstickers/omniomniomnistudio">
+          эмодзи!!!!!!!
+        </a>
+      </div>
       <a
         href="https://yandex.com/maps/-/CPtTfJ~e"
         target="_blank"
