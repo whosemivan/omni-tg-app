@@ -447,22 +447,24 @@ export default function CameraScreen() {
         )}
       </div>
 
-      <div className={s.filterStrip}>
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className={`${s.filterItem} ${f.id === activeFilterId ? s.filterItemActive : ''}`}
-            onClick={() => setActiveFilterId(f.id)}
-          >
-            <span
-              className={s.filterCircle}
-              style={{ filter: f.css.startsWith('__') ? 'none' : f.css }}
-            />
-            <span className={s.filterLabel}>{f.label}</span>
-          </button>
-        ))}
-      </div>
+      {!capturedPhoto && (
+        <div className={s.filterStrip}>
+          {FILTERS.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className={`${s.filterItem} ${f.id === activeFilterId ? s.filterItemActive : ''}`}
+              onClick={() => setActiveFilterId(f.id)}
+            >
+              <span
+                className={s.filterCircle}
+                style={{ filter: f.css.startsWith('__') ? 'none' : f.css }}
+              />
+              <span className={s.filterLabel}>{f.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className={s.controls}>
         <button
