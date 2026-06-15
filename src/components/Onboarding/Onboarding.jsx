@@ -8,6 +8,9 @@ export default function Onboarding() {
         alt="Omni Studio logo"
         className={styles.logo}
       />
+      <div className={styles.loaderWrap}>
+        <span className={styles.spinner} />
+      </div>
     </div>
   );
 }
