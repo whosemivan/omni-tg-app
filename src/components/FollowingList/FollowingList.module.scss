@@ -13,6 +13,7 @@
   align-items: center;
   height: 44px;
   padding: 0 $spacing-sm;
+  padding-right: 14px;
   background: $card-bg;
   border-bottom: 1px solid $card-border;
 }
@@ -40,8 +41,6 @@
 }
 
 .toolbarCount {
-  position: absolute;
-  right: $spacing-lg;
   font-size: $font-size-sm;
   color: $text-secondary;
   font-weight: 600;

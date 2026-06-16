@@ -21,11 +21,13 @@ import FollowingList from './components/FollowingList/FollowingList';
 import SettingsPage from './components/SettingsPage/SettingsPage';
 import FAQPage from './components/FAQPage/FAQPage';
 import { useServices } from './hooks/useServices';
+import { useEngineers } from './hooks/useEngineers';
 import { GUEST_PHOTOS } from './data/guestPhotos';
 import { PEOPLE_PHOTOS } from './data/peoplePhotos';
 import Onboarding from './components/Onboarding/Onboarding';
 
 function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesLoading }) {
+  const { engineers } = useEngineers();
   const [activeTab, setActiveTab] = useState('grid');
   const [showFollowing, setShowFollowing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -113,7 +115,7 @@ function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesL
       <ProfileSection
         servicesCount={services.length}
         followersCount={'1M'}
-        followingCount={7}
+        followingCount={engineers.length}
         onBook={() => onBook(null)}
         onFollowingClick={() => setShowFollowing(true)}
       />
