@@ -1,35 +1,3 @@
-// Color variables reference CSS custom properties (theme-aware)
-$header-gradient-start: var(--header-gradient-start);
-$header-gradient-end: var(--header-gradient-end);
-$header-divider: var(--header-divider);
-
-$page-bg: var(--page-bg);
-$card-bg: var(--card-bg);
-$card-border: var(--card-border);
-$photo-border: var(--photo-border);
-
-$text-primary: var(--text-primary);
-$text-secondary: var(--text-secondary);
-$text-gray: var(--text-gray);
-$text-link: var(--text-link);
-$text-header: var(--text-header);
-$text-stat-label: var(--text-stat-label);
-
-$btn-instagram: var(--btn-instagram);
-$btn-book-gradient-start: var(--header-gradient-start);
-$btn-book-gradient-end: var(--header-gradient-end);
-
-$status-bar-bg: var(--status-bar-bg);
-$status-bar-text: var(--status-bar-text);
-
-$bottom-nav-bg: var(--bottom-nav-bg);
-$bottom-nav-border: var(--bottom-nav-border);
-$bottom-nav-icon: var(--bottom-nav-icon);
-$bottom-nav-active: var(--bottom-nav-active);
-
-$white: var(--surface);
-$black: #000000;
-
 // Typography
 $font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $font-size-xs: 9px;
@@ -50,9 +18,3 @@ $spacing-xl: 20px;
 $radius-sm: 2px;
 $radius-md: 3px;
 $radius-lg: 5px;
-
-// Shadows
-$shadow-card: var(--shadow-card);
-$shadow-header-text: 0 1px 1px rgba(0, 0, 0, 0.48);
-$shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.25);
-$shadow-bottom: 0 1px 1px rgba(0, 0, 0, 0.25);

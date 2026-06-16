@@ -1,0 +1,80 @@
+// Frame reference: iPhone 16 Pro = 402 × 874pt
+// All percentage values derived from Figma pixel coords / frame dimensions
+
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #1a1a2e;
+  overflow: hidden;
+}
+
+// Background photo — cropped to match Figma (image 874×874, offset left -289px)
+// object-position 61% derived: (289 + 402/2) / 874 ≈ 61%
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 61% 50%;
+  pointer-events: none;
+  user-select: none;
+}
+
+// Pink left spine strip — 26/402 ≈ 6.47%
+.strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6.47%;
+  height: 100%;
+  background: #f4e1e0;
+  pointer-events: none;
+}
+
+// GARDEN MUSIC logo — 303/402 = 75.37%, anchored top-right
+.logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 75.37%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+// GPS coordinates
+.coords {
+  position: absolute;
+  left: 41.3%;
+  top: 23.5%;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: 1.2px;
+  color: #f4e1e0;
+  white-space: nowrap;
+}
+
+// БРОНЬ button — 216/402 = 53.73%, anchored bottom-right (bottom=0 in Figma)
+.bookBtn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 53.73%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
