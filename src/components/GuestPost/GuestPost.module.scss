@@ -1,0 +1,85 @@
+@use '../../styles/variables' as *;
+
+.post {
+  background: $white;
+  border-bottom: 1px solid $photo-border;
+  animation: fadeInUp 0.4s ease both;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.06}s;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid $photo-border;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.username {
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.imageWrap {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-lg;
+}
+
+.leftActions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.actionBtn {
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+
+  &:active {
+    opacity: 0.5;
+  }
+}

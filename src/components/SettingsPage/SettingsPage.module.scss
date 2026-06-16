@@ -1,0 +1,140 @@
+@use '../../styles/variables' as *;
+
+.page {
+  flex: 1;
+  background: $page-bg;
+  overflow-y: auto;
+  padding: 0 0 80px;
+}
+
+.section {
+  background: $card-border;
+  border-top: 1px solid $card-border;
+  border-bottom: 1px solid $card-border;
+  margin-bottom: $spacing-lg;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $white;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+
+  &:active {
+    background: $card-bg;
+  }
+}
+
+.toggle {
+  width: 51px;
+  height: 31px;
+  border-radius: 100px;
+  background: $card-border;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.toggleOn {
+  background: #34c759;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease;
+
+  .toggleOn & {
+    transform: translateX(20px);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: $card-border;
+  border-top: 1px solid $card-border;
+  border-bottom: 1px solid $card-border;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $white;
+  text-decoration: none;
+  color: $text-primary;
+
+  &:active {
+    background: $card-bg;
+  }
+}
+
+.iconWrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: $card-bg;
+  border: 1px solid $card-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: $text-link;
+}
+
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.sub {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.chevron {
+  color: $text-gray;
+  flex-shrink: 0;
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $spacing-xl $spacing-lg;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  text-align: center;
+
+  svg {
+    margin-bottom: 2px;
+    color: $text-link;
+  }
+}
+
+.addressStreet {
+  font-weight: 600;
+  color: $text-primary;
+}

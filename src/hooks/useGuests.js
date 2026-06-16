@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://omni-backend-8sfl.onrender.com';
 
-export function useEngineers() {
-  const [engineers, setEngineers] = useState([]);
+export function useGuests() {
+  const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/engineers`)
+    fetch(`${API_URL}/api/guests`)
       .then((res) => {
         if (!res.ok) throw new Error(res.status);
         return res.json();
       })
-      .then((data) => setEngineers(Array.isArray(data) ? data : []))
-      .catch(() => setEngineers([]))
+      .then((data) => setGuests(Array.isArray(data) ? data : []))
+      .catch(() => setGuests([]))
       .finally(() => setLoading(false));
   }, []);
 
-  return { engineers, loading };
+  return { guests, loading };
 }

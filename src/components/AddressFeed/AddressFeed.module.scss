@@ -1,0 +1,64 @@
+@use '../../styles/variables' as *;
+
+.feed {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding-bottom: 57px;
+}
+
+.card {
+  background: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $radius-lg;
+  margin: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.pin {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.addressText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.city {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.street {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.mapCard {
+  margin: 0 $spacing-sm $spacing-sm;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid $card-border;
+  box-shadow: $shadow-card;
+
+  :global {
+    /* reset ServiceMap's own spacing when nested */
+    div[class*='wrapper'] {
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+    }
+  }
+}

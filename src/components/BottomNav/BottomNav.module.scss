@@ -1,0 +1,60 @@
+@use '../../styles/variables' as *;
+
+$nav-bg-from: #3c4043;
+$nav-bg-to: #2d3032;
+$nav-divider: #25282a;
+$nav-active-from: #4a7eb6;
+$nav-active-to: #3a6a9a;
+$icon-color: #b0b5b8;
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 57px;
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(180deg, $nav-bg-from 0%, $nav-bg-to 100%);
+  border-top: 1px solid $nav-divider;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+}
+
+.item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-right: 1px solid $nav-divider;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  &.active {
+    background: linear-gradient(180deg, $nav-active-from 0%, $nav-active-to 100%);
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+  }
+}
+
+.icon {
+  color: $icon-color;
+  filter: drop-shadow(1px 1px 0 rgba(255, 255, 255, 0.15)) drop-shadow(-1px -1px 0 rgba(0, 0, 0, 0.25));
+  flex-shrink: 0;
+}
+
+.item.active .icon {
+  filter: drop-shadow(1px 1px 0 rgba(255, 255, 255, 0.2)) drop-shadow(-1px -1px 0 rgba(0, 0, 0, 0.15));
+}

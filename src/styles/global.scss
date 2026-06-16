@@ -1,5 +1,60 @@
 @use 'variables' as *;
 
+:root {
+  --header-gradient-start: #4e7ea4;
+  --header-gradient-end: #336689;
+  --header-divider: #213649;
+
+  --page-bg: #d4d4d4;
+  --card-bg: #f0f0f0;
+  --card-border: #c0c0c0;
+  --photo-border: #cecece;
+
+  --text-primary: #232323;
+  --text-secondary: #6d6d6d;
+  --text-gray: #6d6d6f;
+  --text-link: #45769a;
+  --text-header: #dde9f0;
+  --text-stat-label: #a4a4a4;
+
+  --btn-instagram: #3897f0;
+
+  --status-bar-bg: #1b1b1b;
+  --status-bar-text: #c9cfcf;
+
+  --bottom-nav-bg: #f8f8f8;
+  --bottom-nav-border: #dbdbdb;
+  --bottom-nav-icon: #262626;
+  --bottom-nav-active: #3897f0;
+
+  --surface: #ffffff;
+
+  --shadow-card: 0 1px 4px rgba(26, 26, 26, 0.25);
+}
+
+[data-theme="dark"] {
+  --page-bg: #121212;
+  --card-bg: #1e1e1e;
+  --card-border: #3a3a3a;
+  --photo-border: #3a3a3a;
+
+  --text-primary: #e8e8e8;
+  --text-secondary: #999999;
+  --text-gray: #888888;
+  --text-link: #6ea3c8;
+  --text-stat-label: #666666;
+
+  --status-bar-bg: #000000;
+
+  --bottom-nav-bg: #1a1a1a;
+  --bottom-nav-border: #2e2e2e;
+  --bottom-nav-icon: #c8c8c8;
+
+  --surface: #242424;
+
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
 *,
 *::before,
 *::after {
@@ -17,14 +72,19 @@ html {
 body {
   font-family: $font-family;
   font-size: $font-size-base;
-  background: #fff;
-  color: #000;
+  color: $text-primary;
+  background: $page-bg;
+  overflow-x: hidden;
   min-height: 100vh;
 }
 
 #root {
   width: 100%;
+  margin: 0 auto;
   min-height: 100vh;
+  position: relative;
+  background: $page-bg;
+  overflow-x: hidden;
 }
 
 a {
@@ -57,4 +117,17 @@ input, select, textarea {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+@media (min-width: 769px) {
+  html,
+  body {
+    background: #1e1e1e !important;
+  }
+
+  #root {
+    background: transparent;
+    min-height: unset;
+    width: auto;
+  }
 }
