@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './IPhoneFrame.module.scss';
 
 export default function IPhoneFrame({ children }) {
@@ -6,12 +6,19 @@ export default function IPhoneFrame({ children }) {
     typeof window !== 'undefined' && window.innerWidth > 768
   );
   const [isOn, setIsOn] = useState(true);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     const onResize = () => setIsDesktop(window.innerWidth > 768);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  useEffect(() => {
+    if (isOn && scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [isOn]);
 
   if (!isDesktop) return children;
 
@@ -21,7 +28,7 @@ export default function IPhoneFrame({ children }) {
         <button className={styles.powerBtn} onClick={() => setIsOn(v => !v)} />
         <div className={styles.innerBody}>
           <div className={`${styles.screen}${isOn ? '' : ` ${styles.screenOff}`}`}>
-            <div className={styles.scrollContent}>
+            <div className={styles.scrollContent} ref={scrollRef}>
               {children}
             </div>
           </div>
