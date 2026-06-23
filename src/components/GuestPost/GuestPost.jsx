@@ -5,12 +5,19 @@ export default function GuestPost({ photo, index, onConfetti }) {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const heartTimer = useRef(null);
+  const lastTap = useRef(0);
 
-  const handleDoubleClick = () => {
-    if (!liked) { setLiked(true); onConfetti?.(); }
-    clearTimeout(heartTimer.current);
-    setShowHeart(true);
-    heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+  const handleImageClick = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 300) {
+      lastTap.current = 0;
+      if (!liked) { setLiked(true); onConfetti?.(); }
+      clearTimeout(heartTimer.current);
+      setShowHeart(true);
+      heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+    } else {
+      lastTap.current = now;
+    }
   };
 
   const sharePost = () => {
@@ -33,7 +40,7 @@ export default function GuestPost({ photo, index, onConfetti }) {
         <span className={s.username}>omnistud1o</span>
       </div>
 
-      <div className={s.imageWrap} onDoubleClick={handleDoubleClick}>
+      <div className={s.imageWrap} onClick={handleImageClick}>
         <img
           className={s.image}
           src={photo}

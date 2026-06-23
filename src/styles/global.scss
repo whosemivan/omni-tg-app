@@ -74,7 +74,6 @@ body {
   font-size: $font-size-base;
   color: $text-primary;
   background: $page-bg;
-  overflow-x: hidden;
   min-height: 100vh;
 }
 
@@ -85,6 +84,10 @@ body {
   position: relative;
   background: $page-bg;
   overflow-x: hidden;
+
+  @media (max-width: 768px) {
+    padding-top: 26px;
+  }
 }
 
 a {

@@ -11,6 +11,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    left: 0;
+    right: 0;
+  }
 }
 
 .left {

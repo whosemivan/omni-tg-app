@@ -6,22 +6,24 @@ export default function ServicePost({ service, onBook }) {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const navigate = useNavigate();
-  const tapTimer = useRef(null);
+  const lastTap = useRef(0);
+  const navTimer = useRef(null);
   const heartTimer = useRef(null);
 
   const handleImageClick = () => {
-    if (tapTimer.current) {
-      clearTimeout(tapTimer.current);
-      tapTimer.current = null;
+    const now = Date.now();
+    if (now - lastTap.current < 300) {
+      clearTimeout(navTimer.current);
+      lastTap.current = 0;
       if (!liked) setLiked(true);
       clearTimeout(heartTimer.current);
       setShowHeart(true);
       heartTimer.current = setTimeout(() => setShowHeart(false), 800);
     } else {
-      tapTimer.current = setTimeout(() => {
-        tapTimer.current = null;
+      lastTap.current = now;
+      navTimer.current = setTimeout(() => {
         navigate(`/service/${service.id}`);
-      }, 250);
+      }, 300);
     }
   };
 
