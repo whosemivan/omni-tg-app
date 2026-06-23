@@ -7,14 +7,23 @@ export default function GuestPost({ photo, index, onConfetti }) {
   const heartTimer = useRef(null);
   const lastTap = useRef(0);
 
-  const handleImageClick = () => {
+  const triggerLike = () => {
+    if (!liked) { setLiked(true); onConfetti?.(); }
+    clearTimeout(heartTimer.current);
+    setShowHeart(true);
+    heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+  };
+
+  // desktop
+  const handleDoubleClick = () => triggerLike();
+
+  // mobile — touchend fires instantly, no 300ms delay
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
     const now = Date.now();
-    if (now - lastTap.current < 300) {
+    if (now - lastTap.current < 500) {
       lastTap.current = 0;
-      if (!liked) { setLiked(true); onConfetti?.(); }
-      clearTimeout(heartTimer.current);
-      setShowHeart(true);
-      heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+      triggerLike();
     } else {
       lastTap.current = now;
     }
@@ -40,7 +49,7 @@ export default function GuestPost({ photo, index, onConfetti }) {
         <span className={s.username}>omnistud1o</span>
       </div>
 
-      <div className={s.imageWrap} onClick={handleImageClick}>
+      <div className={s.imageWrap} onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd}>
         <img
           className={s.image}
           src={photo}

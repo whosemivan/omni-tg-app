@@ -6,24 +6,39 @@ export default function ServicePost({ service, onBook }) {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const navigate = useNavigate();
-  const lastTap = useRef(0);
   const navTimer = useRef(null);
   const heartTimer = useRef(null);
+  const lastTap = useRef(0);
 
-  const handleImageClick = () => {
+  const triggerLike = () => {
+    if (!liked) setLiked(true);
+    clearTimeout(heartTimer.current);
+    setShowHeart(true);
+    heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+  };
+
+  // desktop: single click navigates, double click likes
+  const handleClick = () => {
+    clearTimeout(navTimer.current);
+    navTimer.current = setTimeout(() => navigate(`/service/${service.id}`), 250);
+  };
+
+  const handleDoubleClick = () => {
+    clearTimeout(navTimer.current);
+    triggerLike();
+  };
+
+  // mobile: single tap navigates, double tap likes
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
     const now = Date.now();
-    if (now - lastTap.current < 300) {
+    if (now - lastTap.current < 500) {
       clearTimeout(navTimer.current);
       lastTap.current = 0;
-      if (!liked) setLiked(true);
-      clearTimeout(heartTimer.current);
-      setShowHeart(true);
-      heartTimer.current = setTimeout(() => setShowHeart(false), 800);
+      triggerLike();
     } else {
       lastTap.current = now;
-      navTimer.current = setTimeout(() => {
-        navigate(`/service/${service.id}`);
-      }, 300);
+      navTimer.current = setTimeout(() => navigate(`/service/${service.id}`), 500);
     }
   };
 
@@ -49,7 +64,7 @@ export default function ServicePost({ service, onBook }) {
         </Link>
       </div>
 
-      <div className={s.imageWrap} onClick={handleImageClick}>
+      <div className={s.imageWrap} onClick={handleClick} onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd}>
         <img
           className={s.image}
           src={service.image}
