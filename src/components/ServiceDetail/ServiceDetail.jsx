@@ -4,6 +4,23 @@ import { useServices } from '../../hooks/useServices';
 import Loader from '../Loader/Loader';
 import s from './ServiceDetail.module.scss';
 
+const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+function renderDescription(text) {
+  return text.split('\n').map((line, i) => {
+    const parts = [];
+    let last = 0;
+    let m;
+    LINK_RE.lastIndex = 0;
+    while ((m = LINK_RE.exec(line)) !== null) {
+      if (m.index > last) parts.push(line.slice(last, m.index));
+      parts.push(<a key={m.index} href={m[2]} target="_blank" rel="noopener noreferrer">{m[1]}</a>);
+      last = m.index + m[0].length;
+    }
+    if (last < line.length) parts.push(line.slice(last));
+    return <span key={i}>{i > 0 && <br />}{parts}</span>;
+  });
+}
+
 export default function ServiceDetail({ onBook }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -86,7 +103,7 @@ export default function ServiceDetail({ onBook }) {
 
       <div className={s.content}>
         <h2 className={s.name}>{service.name}</h2>
-        <p className={s.description}>{service.description}</p>
+        <p className={s.description}>{renderDescription(service.description)}</p>
         <p className={s.details}>{service.details}</p>
         {service.price && <p className={s.price}>{service.price}</p>}
       </div>

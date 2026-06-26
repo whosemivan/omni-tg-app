@@ -37,11 +37,27 @@ export default function BookingModal({ service, onClose }) {
     service.name.toLowerCase().includes(k)
   );
 
+  const isDJ = service.name.toLowerCase().includes('диджеинг');
+  const DJ_ENGINEERS = ['миша', 'omni', 'никита', 'seemquieter'];
+  const availableEngineers = isDJ
+    ? engineers.filter((e) => DJ_ENGINEERS.some((kw) => e.name.toLowerCase().includes(kw)))
+    : engineers;
+  const DJ_MIN_RATE = 5000;
+
   const engineer = engineers.find((e) => e.id === engineerId);
+  const engineerName = engineerId === 'any' ? 'Любой звукорежиссер' : engineer?.name;
+  const effectiveRate = engineer?.rate
+    ? (isDJ ? Math.max(engineer.rate, DJ_MIN_RATE) : engineer.rate)
+    : null;
+  const isMaxTwoHours = ['дистан', 'бит', 'инструментал'].some((k) =>
+    service.name.toLowerCase().includes(k)
+  );
+
   const fromIndex = TIME_SLOTS.indexOf(timeFrom);
-  const endSlots = fromIndex >= 0
+  const allEndSlots = fromIndex >= 0
     ? [...TIME_SLOTS.slice(fromIndex + 1), ...TIME_SLOTS.slice(0, fromIndex)]
     : TIME_SLOTS;
+  const endSlots = isMaxTwoHours ? allEndSlots.slice(0, 2) : allEndSlots;
   const timeReady = allNight || (timeFrom && timeTo);
   const canSubmit =
     date && timeReady && (engineerId || !needsEngineer) && !loading &&
@@ -52,7 +68,10 @@ export default function BookingModal({ service, onClose }) {
   const hours = !allNight && timeFrom && timeTo
     ? (toHour > fromHour ? toHour - fromHour : 24 - fromHour + toHour)
     : 0;
-  const totalPrice = engineer?.rate && hours > 0 ? hours * engineer.rate : null;
+  const FIXED_PRICE = 7500;
+  const totalPrice = isMaxTwoHours
+    ? FIXED_PRICE
+    : (effectiveRate && hours > 0 ? hours * effectiveRate : null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -62,7 +81,7 @@ export default function BookingModal({ service, onClose }) {
 
     const payload = {
       service: service.name,
-      engineer: engineer?.name,
+      engineer: engineerName,
       date,
       time: allNight ? 'Всю ночь' : `${timeFrom} – ${timeTo}`,
       hours,
@@ -169,11 +188,15 @@ export default function BookingModal({ service, onClose }) {
                   disabled={engLoading}
                 >
                   <option value="" disabled>{engLoading ? 'Загрузка...' : 'Выберите'}</option>
-                  {engineers.map((eng) => (
-                    <option key={eng.id} value={eng.id}>
-                      {eng.name}{eng.rate ? ` — ${eng.rate.toLocaleString('ru-RU')}₽/ч` : ' (дист.)'}
-                    </option>
-                  ))}
+                  <option value="any">Любой звукорежиссер</option>
+                  {availableEngineers.map((eng) => {
+                    const rate = isDJ && eng.rate ? Math.max(eng.rate, DJ_MIN_RATE) : eng.rate;
+                    return (
+                      <option key={eng.id} value={eng.id}>
+                        {eng.name}{rate ? ` — ${rate.toLocaleString('ru-RU')}₽/ч` : ' (дист.)'}
+                      </option>
+                    );
+                  })}
                 </select>
               </label>
               <a
@@ -199,17 +222,19 @@ export default function BookingModal({ service, onClose }) {
             />
           </label>
 
-          <label className={s.allNightLabel}>
-            <input
-              type="checkbox"
-              checked={allNight}
-              onChange={(e) => {
-                setAllNight(e.target.checked);
-                if (e.target.checked) { setTimeFrom(''); setTimeTo(''); }
-              }}
-            />
-            <span>Всю ночь</span>
-          </label>
+          {!isMaxTwoHours && (
+            <label className={s.allNightLabel}>
+              <input
+                type="checkbox"
+                checked={allNight}
+                onChange={(e) => {
+                  setAllNight(e.target.checked);
+                  if (e.target.checked) { setTimeFrom(''); setTimeTo(''); }
+                }}
+              />
+              <span>Всю ночь</span>
+            </label>
+          )}
 
           <div className={s.timeRow}>
             <label className={s.label}>
@@ -249,11 +274,18 @@ export default function BookingModal({ service, onClose }) {
             </label>
           </div>
 
-          {hours > 0 && engineer && (
+          {isMaxTwoHours ? (
+            <div className={s.priceCalc}>
+              <div className={s.priceTotal}>
+                <span>Итого</span>
+                <span>{FIXED_PRICE.toLocaleString('ru-RU')} ₽</span>
+              </div>
+            </div>
+          ) : hours > 0 && engineer && (
             <div className={s.priceCalc}>
               <div className={s.priceRow}>
                 <span>{engineer.name}</span>
-                <span>{hours} ч</span>
+                <span>{hours} ч × {(effectiveRate || 0).toLocaleString('ru-RU')} ₽/ч</span>
               </div>
               {totalPrice != null ? (
                 <div className={s.priceTotal}>

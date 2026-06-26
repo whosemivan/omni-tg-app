@@ -2,6 +2,23 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import s from './ServicePost.module.scss';
 
+const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+function renderDescription(text) {
+  return text.split('\n').map((line, i) => {
+    const parts = [];
+    let last = 0;
+    let m;
+    LINK_RE.lastIndex = 0;
+    while ((m = LINK_RE.exec(line)) !== null) {
+      if (m.index > last) parts.push(line.slice(last, m.index));
+      parts.push(<a key={m.index} href={m[2]} target="_blank" rel="noopener noreferrer">{m[1]}</a>);
+      last = m.index + m[0].length;
+    }
+    if (last < line.length) parts.push(line.slice(last));
+    return <span key={i}>{i > 0 && <br />}{parts}</span>;
+  });
+}
+
 export default function ServicePost({ service, onBook }) {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
@@ -104,7 +121,7 @@ export default function ServicePost({ service, onBook }) {
 
       <div className={s.caption}>
         <span className={s.captionName}>{service.name}</span>{' '}
-        <span className={s.captionText}>{service.description}</span>
+        <span className={s.captionText}>{renderDescription(service.description)}</span>
         {service.price && (
           <p className={s.price}>{service.price}</p>
         )}

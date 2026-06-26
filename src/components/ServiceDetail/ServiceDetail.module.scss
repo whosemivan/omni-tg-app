@@ -95,6 +95,11 @@
   color: $text-primary;
   line-height: 1.5;
   margin-bottom: $spacing-sm;
+
+  a {
+    color: $text-link;
+    text-decoration: none;
+  }
 }
 
 .details {

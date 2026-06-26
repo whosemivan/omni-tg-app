@@ -132,6 +132,11 @@
 .captionText {
   font-size: $font-size-base;
   color: $text-primary;
+
+  a {
+    color: $text-link;
+    text-decoration: none;
+  }
 }
 
 .price {
