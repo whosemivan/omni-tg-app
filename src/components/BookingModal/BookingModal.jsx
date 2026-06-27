@@ -15,6 +15,12 @@ function getTodayString() {
   return d.toISOString().split('T')[0];
 }
 
+function getMaxDateString() {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 6);
+  return d.toISOString().split('T')[0];
+}
+
 function parseHour(slot) {
   return parseInt(slot, 10);
 }
@@ -218,6 +224,7 @@ export default function BookingModal({ service, onClose }) {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               min={getTodayString()}
+              max={getMaxDateString()}
               required
             />
           </label>
@@ -278,7 +285,7 @@ export default function BookingModal({ service, onClose }) {
             <div className={s.priceCalc}>
               <div className={s.priceTotal}>
                 <span>Итого</span>
-                <span>{FIXED_PRICE.toLocaleString('ru-RU')} ₽</span>
+                <span>от {FIXED_PRICE.toLocaleString('ru-RU')} ₽</span>
               </div>
             </div>
           ) : hours > 0 && engineer && (
