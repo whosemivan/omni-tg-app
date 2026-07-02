@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ENGINEERS_ARTICLE } from '../../data/engineers';
 import { useEngineers } from '../../hooks/useEngineers';
 import s from './BookingModal.module.scss';
@@ -26,6 +26,12 @@ function parseHour(slot) {
 }
 
 export default function BookingModal({ service, onClose }) {
+  useEffect(() => {
+    const handleVisibility = () => { if (document.hidden) onClose(); };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [onClose]);
+
   const { engineers, loading: engLoading } = useEngineers();
   const [engineerId, setEngineerId] = useState('');
   const [date, setDate] = useState('');
@@ -58,6 +64,12 @@ export default function BookingModal({ service, onClose }) {
   const isMaxTwoHours = ['дистан', 'бит', 'инструментал'].some((k) =>
     service.name.toLowerCase().includes(k)
   );
+
+  const isToday = date === getTodayString();
+  const currentHour = new Date().getHours();
+  const startSlots = isToday
+    ? TIME_SLOTS.filter((slot) => parseInt(slot, 10) > currentHour)
+    : TIME_SLOTS;
 
   const fromIndex = TIME_SLOTS.indexOf(timeFrom);
   const allEndSlots = fromIndex >= 0
@@ -222,7 +234,14 @@ export default function BookingModal({ service, onClose }) {
               type="date"
               className={s.input}
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => {
+                const newDate = e.target.value;
+                setDate(newDate);
+                if (newDate === getTodayString() && timeFrom && parseInt(timeFrom, 10) <= new Date().getHours()) {
+                  setTimeFrom('');
+                  setTimeTo('');
+                }
+              }}
               min={getTodayString()}
               max={getMaxDateString()}
               required
@@ -257,7 +276,7 @@ export default function BookingModal({ service, onClose }) {
                 disabled={allNight}
               >
                 <option value="" disabled>Начало</option>
-                {TIME_SLOTS.map((slot) => (
+                {startSlots.map((slot) => (
                   <option key={slot} value={slot}>{slot}</option>
                 ))}
               </select>
