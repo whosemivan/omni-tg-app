@@ -10,15 +10,21 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://omni-backend-8sfl.onren
 const tg = window.Telegram?.WebApp;
 const isTelegram = Boolean(tg?.initData);
 
+function toLocalDateString(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function getTodayString() {
-  const d = new Date();
-  return d.toISOString().split('T')[0];
+  return toLocalDateString(new Date());
 }
 
 function getMaxDateString() {
   const d = new Date();
   d.setMonth(d.getMonth() + 6);
-  return d.toISOString().split('T')[0];
+  return toLocalDateString(d);
 }
 
 function parseHour(slot) {
@@ -77,8 +83,9 @@ export default function BookingModal({ service, onClose }) {
     : TIME_SLOTS;
   const endSlots = isMaxTwoHours ? allEndSlots.slice(0, 2) : allEndSlots;
   const timeReady = allNight || (timeFrom && timeTo);
+  const dateValid = date >= getTodayString() && date <= getMaxDateString();
   const canSubmit =
-    date && timeReady && (engineerId || !needsEngineer) && !loading &&
+    date && dateValid && timeReady && (engineerId || !needsEngineer) && !loading &&
     (isTelegram || tgUsername.trim());
 
   const fromHour = parseHour(timeFrom);
@@ -236,6 +243,7 @@ export default function BookingModal({ service, onClose }) {
               value={date}
               onChange={(e) => {
                 const newDate = e.target.value;
+                if (newDate < getTodayString() || newDate > getMaxDateString()) return;
                 setDate(newDate);
                 if (newDate === getTodayString() && timeFrom && parseInt(timeFrom, 10) <= new Date().getHours()) {
                   setTimeFrom('');
