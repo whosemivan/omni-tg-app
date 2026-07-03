@@ -249,7 +249,6 @@ export default function BookingModal({ service, onClose }) {
                   setTimeFrom('');
                   setTimeTo('');
                 }
-                e.target.blur();
               }}
               min={getTodayString()}
               max={getMaxDateString()}
