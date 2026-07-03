@@ -274,6 +274,7 @@ export default function BookingModal({ service, onClose }) {
             <label className={s.label}>
               <span>С</span>
               <select
+                key={`start-${date}`}
                 className={s.input}
                 value={timeFrom}
                 onChange={(e) => {
