@@ -22,8 +22,6 @@ import SettingsPage from './components/SettingsPage/SettingsPage';
 import FAQPage from './components/FAQPage/FAQPage';
 import { useServices } from './hooks/useServices';
 import { useEngineers } from './hooks/useEngineers';
-import { GUEST_PHOTOS } from './data/guestPhotos';
-import { PEOPLE_PHOTOS } from './data/peoplePhotos';
 import Onboarding from './components/Onboarding/Onboarding';
 
 function MainPage({ onBook, bottomNavTab, onBottomNavChange, services, servicesLoading }) {
